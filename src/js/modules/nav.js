@@ -9,6 +9,7 @@ export function nav(gridOptions, template) {
     resetColumns = document.querySelector('.reset__columns'),
     resetRow = document.querySelector('.reset__row');
 
+
   let sortCol = [],
     sortInp = [];
 
@@ -71,8 +72,7 @@ export function nav(gridOptions, template) {
     gridOptions.api.sizeColumnsToFit();
   }
 
-///////////
-
+///
 
   resetColumns.addEventListener('click', () => {
     localStorage.removeItem('hide');
@@ -101,7 +101,6 @@ export function nav(gridOptions, template) {
 
     }
   })
-
 
   const deleteColumn = () => {
     gridOptions.columnDefs.forEach(item => {
@@ -142,7 +141,6 @@ export function nav(gridOptions, template) {
       })
     }
   }
-
 
   deleteColumn();
 

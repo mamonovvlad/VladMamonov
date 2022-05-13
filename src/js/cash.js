@@ -4,10 +4,12 @@ import tableEnlargement from './modules/table-enlargement.js'
 import {nav} from "./modules/nav.js";
 import {changeCourseCity} from "./modules/sending-data.js";
 
-const proxy = "/proxy.php?url=";
-let res = [];
+const proxy = "/proxy.php?url=",
+  turnOff = document.querySelector('.turn-off'),
+  enableAll = document.querySelector('.enable-all');
 
-let rows = JSON.parse(localStorage.getItem('row_id'));
+let res = [],
+  rows = JSON.parse(localStorage.getItem('row_id'));
 
 ////////////////////////////////////////Table////////////////////////////////
 
@@ -38,6 +40,9 @@ const gridOptions = {
       headerName: 'АКТИВОСТЬ',
       field: "active",
       width: 120,
+      cellClass: params => {
+        return 'field-active';
+      },
       cellRenderer: function (params) {
         return checkbox(params)
       }
@@ -145,6 +150,9 @@ const gridOptions = {
   getRowStyle: function (params) {
     if (params.node.rowIndex % 2 === 0) {
       return {background: '#f9f9f9'}
+    }
+    if (params.data.is_primary === 1) {
+      return {background: '#dedbdb'}
     }
   },
 
@@ -257,6 +265,58 @@ function checkbox(params) {
     changeCourseCity(data)
   });
   return input;
+}
+
+
+if (enableAll) {
+  enableAll.addEventListener('click', () => {
+    let count = gridOptions.api.getDisplayedRowCount();
+    let inpActive = document.querySelectorAll('.field-active input');
+    for (let i = 0; i < count; i++) {
+      let rowNode = gridOptions.api.getDisplayedRowAtIndex(i);
+      rowNode.data.active = 1
+      let data = JSON.stringify({
+        id: rowNode.data.id,
+        field: 'active',
+        value: rowNode.data.active
+      })
+      changeCourseCity(data)
+    }
+    inpActive.forEach(item => {
+      item.checked = true;
+    })
+  })
+}
+
+if (turnOff) {
+  turnOff.addEventListener('click', () => {
+    let count = gridOptions.api.getDisplayedRowCount();
+    let inpActive = document.querySelectorAll('.field-active input');
+    for (let i = 0; i < count; i++) {
+      let rowNode = gridOptions.api.getDisplayedRowAtIndex(i);
+      if (rowNode.data.city.code === 'KIEV') {
+        rowNode.data.active = 1
+        let data = JSON.stringify({
+          id: rowNode.data.id,
+          field: 'active',
+          value: rowNode.data.active
+        })
+        changeCourseCity(data)
+        inpActive[i].checked = true;
+      } else {
+        rowNode.data.active = 0
+        inpActive[i].checked = false;
+        let data = JSON.stringify({
+          id: rowNode.data.id,
+          field: 'active',
+          value: rowNode.data.active
+        })
+        changeCourseCity(data)
+      }
+    }
+
+
+  })
 }
 
 
