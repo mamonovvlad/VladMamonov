@@ -9,9 +9,11 @@ const proxy = "/proxy.php?url=",
   enableAll = document.querySelector('.enable-all');
 
 let res = [],
-  rows = JSON.parse(localStorage.getItem('row_id'));
+  rowsMain = JSON.parse(localStorage.getItem('row_main')),
+  rowsId = JSON.parse(localStorage.getItem('row_id'));
 
 ////////////////////////////////////////Table////////////////////////////////
+
 
 const gridOptions = {
   columnDefs: [
@@ -126,12 +128,16 @@ const gridOptions = {
     {
       sortIndex: 9,
       headerName: 'ИНСТРУМЕНТЫ',
-      width: 100,
+      width: 150,
       cellRenderer: params => {
         return instruments(params, gridOptions, res)
       }
     }
   ],
+  enableRangeSelection: true,
+  rowSelection: 'multiple',
+
+
   enableCellChangeFlash: true,
   rowDragManaged: true,
   singleClickEdit: true,
@@ -148,11 +154,11 @@ const gridOptions = {
   },
 
   getRowStyle: function (params) {
+    if (params.data.is_primary !== 1) {
+      return {background: '#e7e6e6'}
+    }
     if (params.node.rowIndex % 2 === 0) {
       return {background: '#f9f9f9'}
-    }
-    if (params.data.is_primary === 1) {
-      return {background: '#dedbdb'}
     }
   },
 
@@ -171,6 +177,7 @@ document.addEventListener('DOMContentLoaded', function () {
   receivingTable();
 });
 
+
 function receivingTable() {
   let urlTable = proxy +
     encodeURIComponent(
@@ -183,36 +190,52 @@ function receivingTable() {
       dataType: "json",
     })
     .then(data => {
-      if (data !== undefined) {
-        res = JSON.parse(JSON.stringify(data));
-        let newArray = [];
-        let idxRemove = [];
-        let j = 0;
+        if (data !== undefined) {
+          res = JSON.parse(JSON.stringify(data));
+          let newArr = [];
 
-        if (localStorage.getItem('row_id')) {
-          rows.forEach((item) => {
-            idxRemove.push(Number(item))
-            idxRemove.sort();
 
+          res.forEach((row, idx) => {
+            if (row.is_primary === 1) {
+              newArr.push(row);
+            }
+            if (localStorage.getItem('row_main')) {
+              rowsMain.forEach(idx => {
+                if (idx === row.id) {
+                  newArr.push(row);
+                }
+              })
+            }
           })
 
-          for (let i = 0; i < res.length; i++) {
-            if (i !== idxRemove[j]) {
-              newArray.push(res[i]);
-            } else {
-              j += 1;
-            }
+
+          if (localStorage.getItem('row_id')) {
+            let j = 0;
+            let idxRemove = [];
+            let newArray = [];
+            rowsId.forEach((item) => {
+              idxRemove.push(Number(item))
+              idxRemove.sort();
+            })
+            newArr.forEach((item, idx) => {
+              if (item.id !== idxRemove[j]) {
+                console.log()
+                newArray.push(item);
+              } else {
+                j += 1;
+              }
+            })
+            gridOptions.api.setRowData(newArray);
+            deleteRows(idxRemove)
+          } else {
+            gridOptions.api.setRowData(newArr);
           }
-          console.log(newArray)
-          gridOptions.api.setRowData(newArray);
-          deleteRows(idxRemove)
-        } else {
-          gridOptions.api.setRowData(res);
+
+
         }
-      } else {
-        return false;
       }
-    });
+    )
+  ;
 }
 
 
@@ -224,7 +247,7 @@ const deleteRows = (rows) => {
       `
       <label>
         <input type="checkbox" class="default-checkbox row__item" data-row-idx="${row}">
-        <span>${row}</span> 
+        <span>${row}</span>
       </label>
       `
     document.getElementById('filter-row').append(li)
@@ -266,7 +289,6 @@ function checkbox(params) {
   });
   return input;
 }
-
 
 if (enableAll) {
   enableAll.addEventListener('click', () => {
@@ -319,6 +341,7 @@ if (turnOff) {
   })
 }
 
-
 nav(gridOptions);
 tableEnlargement();
+
+
