@@ -9,6 +9,7 @@ const proxy = "/proxy.php?url=",
   enableAll = document.querySelector('.enable-all');
 
 let res = [],
+  rowsArr = [],
   rowsMain = JSON.parse(localStorage.getItem('row_main')),
   rowsId = JSON.parse(localStorage.getItem('row_id'));
 
@@ -20,10 +21,10 @@ const gridOptions = {
     {
       sortIndex: 0,
       headerName: '№',
-      width: 50,
+      width: 100,
       rowDrag: true,
       cellRenderer: params => {
-        return '' + ++params.rowIndex;
+        return refreshRows(params);
       }
     },
     {
@@ -128,7 +129,7 @@ const gridOptions = {
     {
       sortIndex: 9,
       headerName: 'ИНСТРУМЕНТЫ',
-      width: 150,
+      width: 100,
       cellRenderer: params => {
         return instruments(params, gridOptions, res)
       }
@@ -345,3 +346,38 @@ nav(gridOptions);
 tableEnlargement();
 
 
+function refreshRows(params) {
+  let buttons = document.createElement('span');
+  buttons.classList.add('buttons__icons');
+  buttons.innerHTML = `${'' + ++params.rowIndex}  <button class="btn btn__open" style="display: none"  data-row-idx="${params.data.id}">Открыть</button>`;
+
+  if (params.data.is_primary) {
+    let showBtn = buttons.querySelector('.btn__open');
+    showBtn.style.display = 'block';
+  }
+
+  let btnOpen = buttons.querySelector('.btn__open');
+  btnOpen.addEventListener('click', function () {
+    openList(btnOpen, res, params);
+  })
+  return buttons;
+}
+
+function openList(btn, res, params) {
+  localStorage.removeItem('row_main');
+  let sell;
+  let buy;
+  if (params.data.id === Number(btn.getAttribute('data-row-idx'))) {
+    buy = params.data.buyCurrency.code;
+    sell = params.data.sellCurrency.code;
+  }
+  res.forEach((item, idx) => {
+    if (buy === item.buyCurrency.code && sell === item.sellCurrency.code && item.is_primary === 0) {
+      rowsArr.push(item.id)
+      localStorage.setItem('row_main', JSON.stringify(rowsArr));
+      rowsArr = JSON.parse(localStorage.getItem('row_main'));
+      console.log(rowsArr)
+    }
+  })
+
+}
