@@ -10,6 +10,8 @@ const proxy = "/proxy.php?url=",
 
 let res = [],
   rowsArr = [],
+  newArray = [],
+  newArr = [],
   rowsMain = JSON.parse(localStorage.getItem('row_main')),
   rowsId = JSON.parse(localStorage.getItem('row_id'));
 
@@ -193,7 +195,6 @@ function receivingTable() {
     .then(data => {
         if (data !== undefined) {
           res = JSON.parse(JSON.stringify(data));
-          let newArr = [];
 
 
           res.forEach((row, idx) => {
@@ -213,22 +214,22 @@ function receivingTable() {
           if (localStorage.getItem('row_id')) {
             let j = 0;
             let idxRemove = [];
-            let newArray = [];
             rowsId.forEach((item) => {
               idxRemove.push(Number(item))
               idxRemove.sort();
             })
             newArr.forEach((item, idx) => {
               if (item.id !== idxRemove[j]) {
-                console.log()
                 newArray.push(item);
               } else {
                 j += 1;
               }
             })
+            console.log(newArray)
             gridOptions.api.setRowData(newArray);
             deleteRows(idxRemove)
           } else {
+            console.log(newArr)
             gridOptions.api.setRowData(newArr);
           }
 
@@ -373,11 +374,16 @@ function openList(btn, res, params) {
   }
   res.forEach((item, idx) => {
     if (buy === item.buyCurrency.code && sell === item.sellCurrency.code && item.is_primary === 0) {
+      newArr.push(item)
       rowsArr.push(item.id)
       localStorage.setItem('row_main', JSON.stringify(rowsArr));
       rowsArr = JSON.parse(localStorage.getItem('row_main'));
-      console.log(rowsArr)
     }
   })
-
+  console.log(newArr)
+  var param = {
+    force: isForceRefreshSelected(),
+    suppressFlash: isSuppressFlashSelected(),
+  };
+  gridOptions.api.refreshCells(param);
 }
