@@ -34,8 +34,12 @@ const timer = (a, b) => {
   timerElement.innerHTML = parseInt(timerElement.innerHTML) - 1;
   if (timerElement.innerHTML <= "0") {
     timerElement.innerHTML = interval;
-    firstFun();
-    secondFun();
+    if (firstFun) {
+      firstFun();
+    }
+    if (secondFun) {
+      secondFun();
+    }
   }
 
 }

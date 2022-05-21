@@ -73,10 +73,12 @@ export function nav(gridOptions, template) {
   }
 
 ///
-
+if (resetColumns){
   resetColumns.addEventListener('click', () => {
     localStorage.removeItem('hide');
   })
+}
+
 
   if (resetRow) {
     resetRow.addEventListener('click', () => {

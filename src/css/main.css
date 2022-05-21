@@ -342,6 +342,7 @@ button i {
 .label .btn {
   margin: 3px;
   min-width: 25px;
+  height: 25px;
 }
 
 .buttons__icons .btn {
