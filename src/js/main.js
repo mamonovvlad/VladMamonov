@@ -5,7 +5,7 @@ import debounce from "./modules/debounce.js";
 import openWindow from "./modules/open-window.js";
 import {nav} from "./modules/nav.js";
 import {updateTable, changeMultiple} from "./modules/sending-data.js";
-import {startTimeout, resetTimeout, pauseTimeout, timer, timeout} from "./modules/timeout.js";
+import {startTimeout, resetTimeout, pauseTimeout, refresh, timeout} from "./modules/timeout.js";
 
 
 const users = document.getElementById('users'),
@@ -340,6 +340,7 @@ document.addEventListener('DOMContentLoaded', function () {
   startTimeout();
   receivingUsers();
 });
+
 
 //Receiving users  - loading 1
 function receivingUsers() {
@@ -948,5 +949,6 @@ buyCurrency.addEventListener('change', debounce(function (e) {
 
 
 nav(gridOptions, template_id)
-timer(gettingCourses, receivingTable)
 tableEnlargement();
+
+refresh(receivingTable,gettingCourses);

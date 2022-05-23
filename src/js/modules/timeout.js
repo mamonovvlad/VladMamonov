@@ -2,8 +2,6 @@ const interval = "20",
   timerElement = document.getElementById('timer');
 
 let leftTimeout = "20",
-  firstFun = null,
-  secondFun = null,
   timeout;
 
 
@@ -26,23 +24,28 @@ function pauseTimeout() {
 }
 
 //test
-const timer = (a, b) => {
-  if (a !== undefined && b !== undefined) {
-    firstFun = a;
-    secondFun = b;
-  }
+
+function timer() {
   timerElement.innerHTML = parseInt(timerElement.innerHTML) - 1;
   if (timerElement.innerHTML <= "0") {
     timerElement.innerHTML = interval;
-    if (firstFun) {
-      firstFun();
-    }
-    if (secondFun) {
-      secondFun();
-    }
+    refresh()
   }
-
 }
 
 
-export {startTimeout, resetTimeout, pauseTimeout, timer, timeout};
+
+
+let func1;
+let func2;
+function refresh(receivingTable, gettingCourses) {
+  if (receivingTable !== undefined && gettingCourses !== undefined) {
+    func1 = receivingTable;
+    func2 = gettingCourses;
+  }
+  func1();
+  func2();
+}
+
+
+export {startTimeout, resetTimeout, pauseTimeout, refresh, timeout};

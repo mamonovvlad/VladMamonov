@@ -26,7 +26,7 @@ const gridOptions = {
       width: 100,
       rowDrag: true,
       cellRenderer: params => {
-        return refreshRows(params);
+        return refreshRows(params, gridOptions);
       }
     },
     {
@@ -359,12 +359,12 @@ function refreshRows(params) {
 
   let btnOpen = buttons.querySelector('.btn__open');
   btnOpen.addEventListener('click', function () {
-    openList(btnOpen, res, params);
+    openList(btnOpen, res, params, gridOptions);
   })
   return buttons;
 }
 
-function openList(btn, res, params) {
+function openList(btn, res, params, gridOptions) {
   localStorage.removeItem('row_main');
   let sell;
   let buy;
@@ -375,15 +375,15 @@ function openList(btn, res, params) {
   res.forEach((item, idx) => {
     if (buy === item.buyCurrency.code && sell === item.sellCurrency.code && item.is_primary === 0) {
       newArr.push(item)
+      gridOptions.api.applyTransaction({ update: [item]})
       rowsArr.push(item.id)
       localStorage.setItem('row_main', JSON.stringify(rowsArr));
       rowsArr = JSON.parse(localStorage.getItem('row_main'));
     }
   })
-  console.log(newArr)
-  var param = {
-    force: isForceRefreshSelected(),
-    suppressFlash: isSuppressFlashSelected(),
-  };
-  gridOptions.api.refreshCells(param);
+
+  // gridOptions.api.setRowData(newArr);
+
+  // console.log(newArr)
+  // gridOptions.api.setRowData(newArr)
 }

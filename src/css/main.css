@@ -348,6 +348,7 @@ button i {
 .buttons__icons .btn {
   min-width: 25px;
   font-size: 10px;
+  height: 20px;
   padding: 4px;
 }
 
