@@ -73,16 +73,16 @@ export function nav(gridOptions, template) {
   }
 
 ///
-if (resetColumns){
-  resetColumns.addEventListener('click', () => {
-    localStorage.removeItem('hide');
-  })
-}
+  if (resetColumns) {
+    resetColumns.addEventListener('click', () => {
+      localStorage.removeItem('hide');
+    })
+  }
 
 
   if (resetRow) {
     resetRow.addEventListener('click', () => {
-      localStorage.removeItem('row_id');
+      localStorage.removeItem('remove_rows');
     })
   }
 

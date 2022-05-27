@@ -1,4 +1,3 @@
-import onRowDragEnd from './modules/row-drag.js'
 import {instruments} from "./modules/instruments.js";
 import tableEnlargement from './modules/table-enlargement.js'
 import {nav} from "./modules/nav.js";
@@ -9,14 +8,10 @@ const proxy = "/proxy.php?url=",
   enableAll = document.querySelector('.enable-all');
 
 let res = [],
-  rowsArr = [],
-  newArray = [],
   newArr = [],
-  rowsMain = JSON.parse(localStorage.getItem('row_main')),
-  rowsId = JSON.parse(localStorage.getItem('row_id'));
+  removeRows = JSON.parse(localStorage.getItem('remove_rows'));
 
 ////////////////////////////////////////Table////////////////////////////////
-
 
 const gridOptions = {
   columnDefs: [
@@ -24,7 +19,6 @@ const gridOptions = {
       sortIndex: 0,
       headerName: '№',
       width: 100,
-      rowDrag: true,
       cellRenderer: params => {
         return refreshRows(params, gridOptions);
       }
@@ -34,6 +28,7 @@ const gridOptions = {
       headerName: 'НАЗВАНИЕ',
       field: 'title',
       minWidth: 60,
+      sort: "asc"
     },
     {
       sortIndex: 2,
@@ -137,14 +132,6 @@ const gridOptions = {
       }
     }
   ],
-  enableRangeSelection: true,
-  rowSelection: 'multiple',
-
-
-  enableCellChangeFlash: true,
-  rowDragManaged: true,
-  singleClickEdit: true,
-  animateRows: true,
 
   defaultColDef: {
     resizable: true,
@@ -163,14 +150,6 @@ const gridOptions = {
     if (params.node.rowIndex % 2 === 0) {
       return {background: '#f9f9f9'}
     }
-  },
-
-  onCellEditingStarted: function () {
-  },
-  onCellEditingStopped: function (params) {
-  },
-  onRowDragEnd: () => {
-    onRowDragEnd(gridOptions, 1)
   },
 };
 
@@ -196,44 +175,31 @@ function receivingTable() {
         if (data !== undefined) {
           res = JSON.parse(JSON.stringify(data));
 
-
-          res.forEach((row, idx) => {
+          res.forEach((row) => {
             if (row.is_primary === 1) {
               newArr.push(row);
             }
-            if (localStorage.getItem('row_main')) {
-              rowsMain.forEach(idx => {
-                if (idx === row.id) {
-                  newArr.push(row);
-                }
-              })
-            }
           })
 
-
-          if (localStorage.getItem('row_id')) {
-            let j = 0;
+          if (localStorage.getItem('remove_rows')) {
             let idxRemove = [];
-            rowsId.forEach((item) => {
+            removeRows.forEach((item) => {
               idxRemove.push(Number(item))
               idxRemove.sort();
             })
-            newArr.forEach((item, idx) => {
-              if (item.id !== idxRemove[j]) {
-                newArray.push(item);
-              } else {
-                j += 1;
-              }
-            })
-            console.log(newArray)
-            gridOptions.api.setRowData(newArray);
+
+            const selectedIds = idxRemove.map(function (rowNode) {
+              return rowNode;
+            });
+
+            newArr = newArr.filter(function (dataItem) {
+              return selectedIds.indexOf(dataItem.id) < 0;
+            });
+            gridOptions.api.setRowData(newArr);
             deleteRows(idxRemove)
           } else {
-            console.log(newArr)
             gridOptions.api.setRowData(newArr);
           }
-
-
         }
       }
     )
@@ -261,7 +227,7 @@ const deleteRows = (rows) => {
         if (row === Number(item.getAttribute('data-row-idx'))) {
           let index = rows.findIndex(item => item === row)
           rows.splice(index, 1);
-          localStorage.setItem('row_id', JSON.stringify(rows))
+          localStorage.setItem('remove_rows', JSON.stringify(rows))
         }
       })
     })
@@ -294,58 +260,54 @@ function checkbox(params) {
 
 if (enableAll) {
   enableAll.addEventListener('click', () => {
-    let count = gridOptions.api.getDisplayedRowCount();
-    let inpActive = document.querySelectorAll('.field-active input');
-    for (let i = 0; i < count; i++) {
-      let rowNode = gridOptions.api.getDisplayedRowAtIndex(i);
-      rowNode.data.active = 1
-      let data = JSON.stringify({
-        id: rowNode.data.id,
+    let data;
+
+    res.forEach(item => {
+      item.active = 1;
+
+      data = JSON.stringify({
+        id: item.id,
         field: 'active',
-        value: rowNode.data.active
+        value: item.active
       })
+
       changeCourseCity(data)
-    }
-    inpActive.forEach(item => {
-      item.checked = true;
+
     })
+
+    gridOptions.api.setRowData(newArr)
+
   })
 }
 
 if (turnOff) {
   turnOff.addEventListener('click', () => {
-    let count = gridOptions.api.getDisplayedRowCount();
-    let inpActive = document.querySelectorAll('.field-active input');
-    for (let i = 0; i < count; i++) {
-      let rowNode = gridOptions.api.getDisplayedRowAtIndex(i);
-      if (rowNode.data.city.code === 'KIEV') {
-        rowNode.data.active = 1
-        let data = JSON.stringify({
-          id: rowNode.data.id,
+    let data;
+
+    res.forEach(item => {
+      if (item.city.code === 'KIEV') {
+        item.active = 1;
+        data = JSON.stringify({
+          id: item.id,
           field: 'active',
-          value: rowNode.data.active
+          value: item.active
         })
-        changeCourseCity(data)
-        inpActive[i].checked = true;
       } else {
-        rowNode.data.active = 0
-        inpActive[i].checked = false;
-        let data = JSON.stringify({
-          id: rowNode.data.id,
+        item.active = 0;
+        data = JSON.stringify({
+          id: item.id,
           field: 'active',
-          value: rowNode.data.active
+          value: item.active
         })
-        changeCourseCity(data)
       }
-    }
-
-
+      changeCourseCity(data)
+    })
+    gridOptions.api.setRowData(newArr)
   })
 }
 
 nav(gridOptions);
 tableEnlargement();
-
 
 function refreshRows(params) {
   let buttons = document.createElement('span');
@@ -365,25 +327,24 @@ function refreshRows(params) {
 }
 
 function openList(btn, res, params, gridOptions) {
-  localStorage.removeItem('row_main');
   let sell;
   let buy;
+  let items = [];
   if (params.data.id === Number(btn.getAttribute('data-row-idx'))) {
     buy = params.data.buyCurrency.code;
     sell = params.data.sellCurrency.code;
   }
   res.forEach((item, idx) => {
     if (buy === item.buyCurrency.code && sell === item.sellCurrency.code && item.is_primary === 0) {
-      newArr.push(item)
-      gridOptions.api.applyTransaction({ update: [item]})
-      rowsArr.push(item.id)
-      localStorage.setItem('row_main', JSON.stringify(rowsArr));
-      rowsArr = JSON.parse(localStorage.getItem('row_main'));
+      items.push(item)
     }
   })
 
-  // gridOptions.api.setRowData(newArr);
-
-  // console.log(newArr)
-  // gridOptions.api.setRowData(newArr)
+  let newStore = newArr.slice();
+  for (let i = 0; i < items.length; i++) {
+    let newItem = items[i];
+    newStore.push(newItem)
+  }
+  // gridOptions.api.applyTransaction({add: [newArr]})
+  gridOptions.api.setRowData(newStore);
 }

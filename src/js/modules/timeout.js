@@ -34,10 +34,9 @@ function timer() {
 }
 
 
-
-
 let func1;
 let func2;
+
 function refresh(receivingTable, gettingCourses) {
   if (receivingTable !== undefined && gettingCourses !== undefined) {
     func1 = receivingTable;

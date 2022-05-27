@@ -951,4 +951,4 @@ buyCurrency.addEventListener('change', debounce(function (e) {
 nav(gridOptions, template_id)
 tableEnlargement();
 
-refresh(receivingTable,gettingCourses);
+refresh(receivingTable, gettingCourses);
