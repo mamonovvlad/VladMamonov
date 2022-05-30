@@ -1,7 +1,7 @@
 import {instruments} from "./modules/instruments.js";
 import tableEnlargement from './modules/table-enlargement.js'
 import {nav} from "./modules/nav.js";
-import {changeCourseCity} from "./modules/sending-data.js";
+import {changeCourseCity, updateTable} from "./modules/sending-data.js";
 
 const proxy = "/proxy.php?url=",
   turnOff = document.querySelector('.turn-off'),
@@ -44,16 +44,18 @@ const gridOptions = {
         return 'field-active';
       },
       cellRenderer: function (params) {
-        return checkbox(params)
+        return checkbox(params, 'inp__active')
       }
     },
     {
       sortIndex: 4,
       headerName: 'КУРС',
       width: 120,
-      editable: true,
       cellClass: params => {
-        return 'field-change';
+        return params.data.is_percent === 1 ? 'field-change' : 'text-center';
+      },
+      editable: params => {
+        return params.data.is_percent === 1 ? true : '';
       },
       valueGetter: function (params) {
         let sell = parseFloat(params.data.course.sell);
@@ -77,7 +79,7 @@ const gridOptions = {
             field: 'course.buy',
             value: params.newValue
           })
-          changeCourseCity(data)
+          updateTable(data)
           gridOptions.api.flashCells({rowNodes: [rowNode], columns: ['course.buy']});
 
           return params.newValue;
@@ -89,7 +91,7 @@ const gridOptions = {
             field: 'course.sell',
             value: params.newValue
           })
-          changeCourseCity(data)
+          updateTable(data)
           gridOptions.api.flashCells({rowNodes: [rowNode], columns: ['course.sell']});
 
           return params.newValue;
@@ -104,17 +106,19 @@ const gridOptions = {
       width: 120,
       field: "is_percent",
       cellRenderer: function (params) {
-        return checkbox(params)
+        return checkbox(params, 'inp__is_percent')
       }
     },
     {
       sortIndex: 6,
       headerName: 'ПРОЦЕНТ',
       width: 120,
-      field: "course.min_max_percent",
-      editable: true,
+      field: "rate_diff_percent",
       cellClass: params => {
-        return 'field-change';
+        return params.data.is_percent === 0 ? 'field-change' : 'text-center';
+      },
+      editable: params => {
+        return params.data.is_percent === 0 ? true : '';
       },
     },
     {
@@ -132,6 +136,7 @@ const gridOptions = {
       }
     }
   ],
+
 
   defaultColDef: {
     resizable: true,
@@ -174,7 +179,6 @@ function receivingTable() {
     .then(data => {
         if (data !== undefined) {
           res = JSON.parse(JSON.stringify(data));
-
           res.forEach((row) => {
             if (row.is_primary === 1) {
               newArr.push(row);
@@ -234,10 +238,11 @@ const deleteRows = (rows) => {
   })
 }
 
-function checkbox(params) {
+function checkbox(params, cls) {
+  let rowNode = gridOptions.api.getDisplayedRowAtIndex(`${params.node.rowIndex}`);
   let input = document.createElement('input');
   input.type = "checkbox";
-  input.className = 'default-checkbox '
+  input.className = `default-checkbox ${cls}`
   input.checked = params.value === 1;
 
   input.addEventListener('change', function (event) {
@@ -252,6 +257,11 @@ function checkbox(params) {
       field: params.colDef.field,
       value: params.value
     })
+
+    if (this.classList.contains('inp__is_percent')) {
+      rowNode.setDataValue(params.colDef.field, params.value)
+      gridOptions.api.redrawRows({rowNodes: [rowNode], columns: ['rate_diff_percent']});
+    }
 
     changeCourseCity(data)
   });
@@ -283,7 +293,6 @@ if (enableAll) {
 if (turnOff) {
   turnOff.addEventListener('click', () => {
     let data;
-
     res.forEach(item => {
       if (item.city.code === 'KIEV') {
         item.active = 1;
@@ -347,4 +356,6 @@ function openList(btn, res, params, gridOptions) {
   }
   // gridOptions.api.applyTransaction({add: [newArr]})
   gridOptions.api.setRowData(newStore);
+  console.log(newStore)
 }
+

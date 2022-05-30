@@ -30,9 +30,12 @@ function hideRow(btn, res) {
     if (item.id === Number(btn.getAttribute('data-row-idx'))) {
       btn.style.backgroundColor = 'red';
       rowsId.push(item.id)
-      localStorage.setItem('remove_rows', JSON.stringify(rowsId));
-      rowsId = JSON.parse(localStorage.getItem('remove_rows'));
     }
   })
+  rowsId = rowsId.filter(function(item, pos) {
+    return rowsId.indexOf(item) === pos;
+  })
+  localStorage.setItem('remove_rows', JSON.stringify(rowsId));
+  rowsId = JSON.parse(localStorage.getItem('remove_rows'));
 }
 

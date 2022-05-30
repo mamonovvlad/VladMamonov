@@ -517,6 +517,7 @@ function checkbox(params, col) {
       params.node.data.col = params.value;
 
       rowNode.setDataValue(col, params.value)
+
       let data = JSON.stringify({
         id: params.node.data.course.id,
         field: params.column.colId,
