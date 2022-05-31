@@ -44,7 +44,7 @@ const gridOptions = {
         return 'field-active';
       },
       cellRenderer: function (params) {
-        return checkbox(params, 'inp__active')
+        return checkbox(params, 'inp__active', 'active')
       }
     },
     {
@@ -81,11 +81,9 @@ const gridOptions = {
           })
           updateTable(data)
           gridOptions.api.flashCells({rowNodes: [rowNode], columns: ['course.buy']});
-
           return params.newValue;
         } else if (buy >= 1 && buy <= 1) {
           params.data.course.sell = params.newValue;
-
           let data = JSON.stringify({
             id: params.node.data.course.id,
             field: 'course.sell',
@@ -93,7 +91,6 @@ const gridOptions = {
           })
           updateTable(data)
           gridOptions.api.flashCells({rowNodes: [rowNode], columns: ['course.sell']});
-
           return params.newValue;
         } else {
           return false
@@ -106,7 +103,7 @@ const gridOptions = {
       width: 120,
       field: "is_percent",
       cellRenderer: function (params) {
-        return checkbox(params, 'inp__is_percent')
+        return checkbox(params, 'inp__is_percent', 'is_percent')
       }
     },
     {
@@ -155,6 +152,18 @@ const gridOptions = {
     if (params.node.rowIndex % 2 === 0) {
       return {background: '#f9f9f9'}
     }
+  },
+  onCellEditingStopped: function (params) {
+    let rowNode = gridOptions.api.getDisplayedRowAtIndex(`${params.node.rowIndex}`);
+    if (params.colDef.field !== undefined) {
+      let data = JSON.stringify({
+        id: params.node.data.course.id,
+        field: params.colDef.field,
+        value: params.value
+      })
+      changeCourseCity(data);
+    }
+    gridOptions.api.flashCells({rowNodes: [rowNode], columns: [params.colDef.field]});
   },
 };
 
@@ -238,7 +247,7 @@ const deleteRows = (rows) => {
   })
 }
 
-function checkbox(params, cls) {
+function checkbox(params, cls, col) {
   let rowNode = gridOptions.api.getDisplayedRowAtIndex(`${params.node.rowIndex}`);
   let input = document.createElement('input');
   input.type = "checkbox";
