@@ -8,7 +8,9 @@ const proxy = "/proxy.php?url=",
   enableAll = document.querySelector('.enable-all');
 
 let res = [],
+  idxRemove = [],
   newArr = [],
+  selectedIds,
   removeRows = JSON.parse(localStorage.getItem('remove_rows'));
 
 ////////////////////////////////////////Table////////////////////////////////
@@ -52,58 +54,20 @@ const gridOptions = {
       headerName: 'КУРС',
       width: 120,
       cellClass: params => {
-        return params.data.is_percent === 1 ? 'field-change' : 'text-center';
+        return params.data.is_rate === 1 ? 'field-change' : 'text-center';
       },
       editable: params => {
-        return params.data.is_percent === 1 ? true : '';
+        return params.data.is_rate === 1 ? true : '';
       },
-      valueGetter: function (params) {
-        let sell = parseFloat(params.data.course.sell);
-        let buy = parseFloat(params.data.course.buy);
-        if (sell >= 1 && sell <= 1) {
-          return buy.toFixed(4);
-        } else if (buy >= 1 && buy <= 1) {
-          return sell.toFixed(4);
-        }
-      },
-      valueSetter: function (params) {
-        let sell = parseFloat(params.data.course.sell);
-        let buy = parseFloat(params.data.course.buy);
-        let rowNode = gridOptions.api.getDisplayedRowAtIndex(`${params.node.rowIndex}`);
-
-        if (sell >= 1 && sell <= 1) {
-          params.data.course.buy = params.newValue;
-
-          let data = JSON.stringify({
-            id: params.node.data.course.id,
-            field: 'course.buy',
-            value: params.newValue
-          })
-          updateTable(data)
-          gridOptions.api.flashCells({rowNodes: [rowNode], columns: ['course.buy']});
-          return params.newValue;
-        } else if (buy >= 1 && buy <= 1) {
-          params.data.course.sell = params.newValue;
-          let data = JSON.stringify({
-            id: params.node.data.course.id,
-            field: 'course.sell',
-            value: params.newValue
-          })
-          updateTable(data)
-          gridOptions.api.flashCells({rowNodes: [rowNode], columns: ['course.sell']});
-          return params.newValue;
-        } else {
-          return false
-        }
-      },
+      field: 'rate'
     },
     {
       sortIndex: 5,
       headerName: 'ПЕРЕКЛЮЧАТЕЛЬ КУРСА',
       width: 120,
-      field: "is_percent",
+      field: "is_rate",
       cellRenderer: function (params) {
-        return checkbox(params, 'inp__is_percent', 'is_percent')
+        return checkbox(params, 'inp__is_rate', 'is_rate')
       }
     },
     {
@@ -112,10 +76,10 @@ const gridOptions = {
       width: 120,
       field: "rate_diff_percent",
       cellClass: params => {
-        return params.data.is_percent === 0 ? 'field-change' : 'text-center';
+        return params.data.is_rate === 0 ? 'field-change' : 'text-center';
       },
       editable: params => {
-        return params.data.is_percent === 0 ? true : '';
+        return params.data.is_rate === 0 ? true : '';
       },
     },
     {
@@ -190,24 +154,24 @@ function receivingTable() {
           res = JSON.parse(JSON.stringify(data));
           res.forEach((row) => {
             if (row.is_primary === 1) {
+              console.log(row)
               newArr.push(row);
             }
           })
 
           if (localStorage.getItem('remove_rows')) {
-            let idxRemove = [];
             removeRows.forEach((item) => {
               idxRemove.push(Number(item))
               idxRemove.sort();
             })
-
-            const selectedIds = idxRemove.map(function (rowNode) {
+            selectedIds = idxRemove.map(function (rowNode) {
               return rowNode;
             });
-
+            console.log(selectedIds)
             newArr = newArr.filter(function (dataItem) {
               return selectedIds.indexOf(dataItem.id) < 0;
             });
+            console.log(newArr)
             gridOptions.api.setRowData(newArr);
             deleteRows(idxRemove)
           } else {
@@ -267,7 +231,7 @@ function checkbox(params, cls, col) {
       value: params.value
     })
 
-    if (this.classList.contains('inp__is_percent')) {
+    if (this.classList.contains('inp__is_rate')) {
       rowNode.setDataValue(params.colDef.field, params.value)
       gridOptions.api.redrawRows({rowNodes: [rowNode], columns: ['rate_diff_percent']});
     }
@@ -358,13 +322,17 @@ function openList(btn, res, params, gridOptions) {
     }
   })
 
+
   let newStore = newArr.slice();
   for (let i = 0; i < items.length; i++) {
     let newItem = items[i];
     newStore.push(newItem)
   }
   // gridOptions.api.applyTransaction({add: [newArr]})
+  if (selectedIds !== undefined) {
+    newStore = newStore.filter(function (dataItem) {
+      return selectedIds.indexOf(dataItem.id) < 0;
+    });
+  }
   gridOptions.api.setRowData(newStore);
-  console.log(newStore)
 }
-

@@ -9,12 +9,8 @@ export function instruments(params, gridOptions, res) {
     <a href="/course-city/delete?id=${params.data.id}"  target="_blank" title="Удалить" data-method="POST" class="fa-solid fa-trash-can"></a>
     <button class="btn btn__delete" style="display: none"  data-row-idx="${params.data.id}">Удалить</button>
   `
-  let btnDelete = buttons.querySelector('.btn__delete');
-
-  if (params.data.is_primary) {
     let btnDelete = buttons.querySelector('.btn__delete');
     btnDelete.style.display = 'block';
-  }
 
 
   btnDelete.addEventListener('click', function () {
