@@ -63,11 +63,20 @@ const gridOptions = {
     },
     {
       sortIndex: 5,
-      headerName: 'ПЕРЕКЛЮЧАТЕЛЬ КУРСА',
+      headerName: 'КУРС АКТИВЕН',
       width: 120,
       field: "is_rate",
       cellRenderer: function (params) {
         return checkbox(params, 'inp__is_rate', 'is_rate')
+      }
+    },
+    {
+      sortIndex: 5,
+      headerName: 'ПРОЦЕНТ АКТИВЕН',
+      width: 120,
+      field: "is_percent",
+      cellRenderer: function (params) {
+        return checkbox(params, 'is_percent', 'is_percent')
       }
     },
     {
