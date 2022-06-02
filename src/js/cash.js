@@ -76,7 +76,7 @@ const gridOptions = {
       width: 120,
       field: "is_percent",
       cellRenderer: function (params) {
-        return checkbox(params, 'is_percent', 'is_percent')
+        return checkbox(params, 'inp__is_percent', 'is_percent')
       }
     },
     {
@@ -221,10 +221,15 @@ function checkbox(params, cls, col) {
   let rowNode = gridOptions.api.getDisplayedRowAtIndex(`${params.node.rowIndex}`);
   let input = document.createElement('input');
   input.type = "checkbox";
+  input.setAttribute('data-idx', rowNode.rowIndex);
   input.className = `default-checkbox ${cls}`
   input.checked = params.value === 1;
 
+
   input.addEventListener('change', function (event) {
+    let inpPercent = document.querySelectorAll('.inp__is_percent');
+    let inpRate = document.querySelectorAll('.inp__is_rate');
+
     if (params.value === 0) {
       params.value = 1;
     } else {
@@ -238,8 +243,47 @@ function checkbox(params, cls, col) {
     })
 
     if (this.classList.contains('inp__is_rate')) {
-      rowNode.setDataValue(params.colDef.field, params.value)
-      gridOptions.api.redrawRows({rowNodes: [rowNode], columns: ['rate_diff_percent']});
+      inpPercent.forEach(item => {
+        if (item.getAttribute('data-idx') === String(params.rowIndex)) {
+          if (this.checked === true) {
+            item.checked = false;
+            params.data.is_percent = 0;
+          } else {
+            item.checked = true;
+            params.data.is_percent = 1;
+          }
+        }
+      })
+      let data = JSON.stringify({
+        id: params.data.id,
+        field: 'is_percent',
+        value: params.data.is_percent
+      })
+      changeCourseCity(data)
+      setTimeout(() => {
+        rowNode.setDataValue(params.colDef.field, params.value)
+        gridOptions.api.redrawRows({rowNodes: [rowNode], columns: ['rate_diff_percent']})
+      }, 500)
+    }
+
+    if (this.classList.contains('inp__is_percent')) {
+      inpRate.forEach(item => {
+        if (item.getAttribute('data-idx') === String(params.rowIndex)) {
+          if (this.checked === true) {
+            item.checked = false;
+            params.data.is_rate = 0;
+          } else {
+            item.checked = true;
+            params.data.is_rate = 1;
+          }
+          let data = JSON.stringify({
+            id: params.data.id,
+            field: 'is_rate',
+            value: params.data.is_rate,
+          })
+          changeCourseCity(data)
+        }
+      })
     }
 
     changeCourseCity(data)
