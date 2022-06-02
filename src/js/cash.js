@@ -121,7 +121,7 @@ const gridOptions = {
     let rowNode = gridOptions.api.getDisplayedRowAtIndex(`${params.node.rowIndex}`);
     if (params.colDef.field !== undefined) {
       let data = JSON.stringify({
-        id: params.node.data.course.id,
+        id: params.data.id,
         field: params.colDef.field,
         value: params.value
       })
@@ -154,7 +154,6 @@ function receivingTable() {
           res = JSON.parse(JSON.stringify(data));
           res.forEach((row) => {
             if (row.is_primary === 1) {
-              console.log(row)
               newArr.push(row);
             }
           })
@@ -167,11 +166,9 @@ function receivingTable() {
             selectedIds = idxRemove.map(function (rowNode) {
               return rowNode;
             });
-            console.log(selectedIds)
             newArr = newArr.filter(function (dataItem) {
               return selectedIds.indexOf(dataItem.id) < 0;
             });
-            console.log(newArr)
             gridOptions.api.setRowData(newArr);
             deleteRows(idxRemove)
           } else {
