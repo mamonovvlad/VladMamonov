@@ -9,20 +9,21 @@ function windowOpen(params) {
       <i class="fas fa-chart-line"></i>
     </a>
   `
-
+  
   let link = links.querySelector('.open-window')
   link.addEventListener('click', () => {
     let sellCurrency = link.getAttribute('data-sell')
     let buyCurrency = link.getAttribute('data-buy')
-
+    
     openTab(sellCurrency, buyCurrency)
   });
-
+  
   return links;
 }
 
 const openTab = (sellCurrency, buyCurrency) => {
   const namesMap = {
+    BNBBEP20: 'binance-coin',
     ETH: 'ethereum',
     LTC: 'litecoin',
     ZEC: 'zcash',
@@ -59,7 +60,7 @@ const openTab = (sellCurrency, buyCurrency) => {
     USDTERC20: 'tether-erc20',
   };
   window.open("//bestchange.ru/" + namesMap[sellCurrency] + '-to-' + namesMap[buyCurrency] + ".html", 'example', 'width=1000,height=500');
-
+  
 }
 
 export default windowOpen;

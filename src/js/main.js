@@ -29,6 +29,7 @@ let template_id = localStorage.getItem('template_id'),
   courseDash,
   courseZec,
   courseLtc,
+  courseBnb,
   courseEth,
   courseDoge,
   courseTron;
@@ -62,20 +63,20 @@ const gridOptions = {
       valueGetter: function (params) {
         let sell = parseFloat(params.node.data.course.sell);
         let buy = parseFloat(params.node.data.course.buy);
-
+        
         let buyCur = params.node.data.buyCurrency.id;
         let sellCur = params.node.data.sellCurrency.id;
-
+        
         let usdId = ['1', '2', '6', '7', '8', '12', '28', '29', '30', '42'];
         let uahId = ['3', '5', '26', '31', '35', '43', '44', '45'];
         let rubId = ['9', '11', '13', '14', '15', '16', '17', '18', '23', '24', '37', '40'];
-
+        
         if (usdId.includes(sellCur) && usdId.includes(buyCur) || uahId.includes(sellCur) && uahId.includes(buyCur) || rubId.includes(sellCur) && rubId.includes(buyCur)) {
           return course(5);
         } else {
           return course(5);
         }
-
+        
         function course(number) {
           if (sell >= 1 && sell <= 1) {
             return buy.toFixed(number);
@@ -83,7 +84,7 @@ const gridOptions = {
             return sell.toFixed(number);
           }
         }
-
+        
       },
       valueSetter: function (params) {
         let sell = parseFloat(params.data.course.sell);
@@ -314,7 +315,7 @@ const gridOptions = {
       return {background: '#f9f9f9'}
     }
   },
-
+  
   onCellEditingStarted: function () {
     pauseTimeout();
   },
@@ -407,7 +408,7 @@ function receivingTemplate() {
       document.title = 'Нет подходящих темплейтов';
       templates.append(option);
     }
-
+    
     receivingValue()
   });
 }
@@ -459,6 +460,9 @@ function gettingCourses() {
       } else if (value.name === 'ethereum_euro_course') {
         data = JSON.parse(value.value);
         courseEthEur = Number(data.usd);
+      } else if (value.name === 'bnb_course') {
+        data = JSON.parse(value.value);
+        courseBnb = Number(data.usd);
       }
     }
   });
@@ -476,7 +480,7 @@ function receivingValue() {
     params.id = template_id;
   }
   receivingTable()
-
+  
 }
 
 function receivingTable() {
@@ -506,8 +510,8 @@ function checkbox(params, col) {
   input.type = "checkbox";
   input.className = 'default-checkbox '
   input.checked = params.value === "1";
-
-
+  
+  
   input.addEventListener('change', function (event) {
       if (params.value === '0') {
         params.value = '1';
@@ -515,21 +519,21 @@ function checkbox(params, col) {
         params.value = '0';
       }
       params.node.data.col = params.value;
-
+      
       rowNode.setDataValue(col, params.value)
-
+      
       let data = JSON.stringify({
         id: params.node.data.course.id,
         field: params.column.colId,
         value: params.value
       })
-
-
+      
+      
       if (params.data.course.is_active_limiter) {
         gridOptions.api.redrawRows({rowNodes: [rowNode], columns: ['course.limiter']});
       }
-
-
+      
+      
       updateTable(data)
       gridOptions.api.flashCells({rowNodes: [rowNode], columns: [params.colDef.field]});
     }
@@ -548,30 +552,30 @@ function bindingCheckbox(params) {
   input.setAttribute('data-buy', `${params.data.buyCurrency.id}`)
   input.setAttribute('data-id', `${params.node.data.course.id}`)
   input.setAttribute('data-index', `${rowNode.id}`)
-
-
+  
+  
   if (params.data.course.link_to_exchange === '1') {
     input.classList.add('change--true');
   } else {
     input.classList.remove('change--true');
   }
-
+  
   input.addEventListener('change', function () {
-
+    
     let nameColumn = columnClass;
     if (this.classList.contains('column-is_smart')) {
       nameColumn = "link_to_exchange";
     } else if (this.classList.contains('column-link_to_exchange')) {
       nameColumn = 'is_smart'
     }
-
+    
     let reverseCheckboxBuySell = document.querySelectorAll('.ids-' + input.getAttribute('data-sell') + '-' + input.getAttribute('data-buy') + '.column-' + nameColumn)
     let reverseCheckboxSellBuy = document.querySelectorAll('.ids-' + input.getAttribute('data-buy') + '-' + input.getAttribute('data-sell') + '.column-' + nameColumn)
-
+    
     let checkboxBuySell = document.querySelectorAll('.ids-' + input.getAttribute('data-buy') + '-' + input.getAttribute('data-sell') + '.column-' + columnClass)
     let checkboxSellBuy = document.querySelectorAll('.ids-' + input.getAttribute('data-sell') + '-' + input.getAttribute('data-buy') + '.column-' + columnClass)
-
-
+    
+    
     checkboxBuySell.forEach(item => {
       if (!item.checked) {
         item.checked = true;
@@ -604,24 +608,24 @@ function bindingCheckbox(params) {
         field: params.column.colId,
         value: params.value
       })
-
+      
       updateTable(data);
     })
-
+    
     reverseCheckboxBuySell.forEach(item => {
       item.checked = false;
       params.value = '0';
       item.classList.remove('change--true');
-
+      
     })
     reverseCheckboxSellBuy.forEach(item => {
       item.checked = false;
       item.classList.remove('change--true');
       params.value = "0";
-
+      
     })
-
-
+    
+    
   })
   return input
 }
@@ -634,7 +638,7 @@ function calculationsData(params, sing) {
   const uahId = ['3', '5', '26', '31', '35', '43', '44', '45'];
   const rubId = ['9', '11', '13', '14', '15', '16', '17', '18', '23', '24', '37', '40'];
   const eurId = ['32', '48'];
-
+  
   let rub;
   let usd;
   let uah;
@@ -646,57 +650,62 @@ function calculationsData(params, sing) {
   const eth = '25';
   const doge = '39';
   const tron = '46';
-
-
+  const bnb = '49';
+  
+  
   rubId.forEach(currency => {
     searchMatches(currency, 'rub')
   })
-
+  
   usdId.forEach(currency => {
     searchMatches(currency, 'usd')
   })
-
+  
   uahId.forEach(currency => {
     searchMatches(currency, 'uah')
   })
-
+  
   eurId.forEach(currency => {
     searchMatches(currency, 'eur')
   })
-
+  
   if (rub === sellCurrency && usd === buyCurrency || usd === sellCurrency && rub === buyCurrency) {
     formulaDefault(courseUsdRub)
   }
-
+  
   if (uah === sellCurrency && usd === buyCurrency || usd === sellCurrency && uah === buyCurrency) {
     formulaDefault(courseUsdUah)
   }
-
+  
   if (uah === sellCurrency && rub === buyCurrency || rub === sellCurrency && uah === buyCurrency) {
     formulaDefault(courseUahRub)
   }
-
+  
   //Crypt - Usd
   if (btc === sellCurrency && usd === buyCurrency || usd === sellCurrency && btc === buyCurrency) {
     formulaDefault(courseBtc)
   }
-
+  
   if (dash === sellCurrency && usd === buyCurrency || usd === sellCurrency && dash === buyCurrency) {
     formulaDefault(courseDash)
   }
-
+  
   if (zec === sellCurrency && usd === buyCurrency || usd === sellCurrency && zec === buyCurrency) {
     formulaDefault(courseZec)
   }
-
+  
   if (ltc === sellCurrency && usd === buyCurrency || usd === sellCurrency && ltc === buyCurrency) {
     formulaDefault(courseLtc)
   }
-
+  
+  if (bnb === sellCurrency && usd === buyCurrency || usd === sellCurrency && bnb === buyCurrency) {
+    formulaDefault(courseBnb)
+  }
+  
   if (eth === sellCurrency && usd === buyCurrency || usd === sellCurrency && eth === buyCurrency) {
     formulaDefault(courseEth)
   }
-
+  
   if (doge === sellCurrency && usd === buyCurrency || usd === sellCurrency && doge === buyCurrency) {
     let res = (1 / courseDoge);
     formulaDefault(res)
@@ -705,74 +714,82 @@ function calculationsData(params, sing) {
     let res = (1 / courseTron);
     formulaDefault(res)
   }
-
+  
   //Crypt - Rus
   if (btc === sellCurrency && rub === buyCurrency || rub === sellCurrency && btc === buyCurrency) {
     formulaDefault(courseBtc, courseUsdRub, 'crypt');
   }
-
+  
   if (dash === sellCurrency && rub === buyCurrency || rub === sellCurrency && dash === buyCurrency) {
     formulaDefault(courseDash, courseUsdRub, 'crypt');
   }
-
+  
   if (zec === sellCurrency && rub === buyCurrency || rub === sellCurrency && zec === buyCurrency) {
     formulaDefault(courseZec, courseUsdRub, 'crypt');
   }
-
+  
   if (ltc === sellCurrency && rub === buyCurrency || rub === sellCurrency && ltc === buyCurrency) {
     formulaDefault(courseLtc, courseUsdRub, 'crypt');
   }
-
+  
+  if (bnb === sellCurrency && rub === buyCurrency || rub === sellCurrency && bnb === buyCurrency) {
+    formulaDefault(courseBnb, courseUsdRub, 'crypt')
+  }
+  
   if (eth === sellCurrency && rub === buyCurrency || rub === sellCurrency && eth === buyCurrency) {
     formulaDefault(courseEth, courseUsdRub, 'crypt');
   }
-
+  
   if (doge === sellCurrency && rub === buyCurrency || rub === sellCurrency && doge === buyCurrency) {
     formulaDefault(courseDoge, courseUsdRub, 'crypt');
   }
   if (tron === sellCurrency && rub === buyCurrency || rub === sellCurrency && tron === buyCurrency) {
     formulaDefault(courseTron, courseUsdRub, 'crypt');
   }
-
+  
   //Crypt - Uah
   if (btc === sellCurrency && uah === buyCurrency || uah === sellCurrency && btc === buyCurrency) {
     formulaDefault(courseBtc, courseUsdUah, 'crypt');
   }
-
+  
   if (dash === sellCurrency && uah === buyCurrency || uah === sellCurrency && dash === buyCurrency) {
     formulaDefault(courseDash, courseUsdUah, 'crypt');
   }
-
+  
   if (zec === sellCurrency && uah === buyCurrency || uah === sellCurrency && zec === buyCurrency) {
     formulaDefault(courseZec, courseUsdUah, 'crypt');
   }
-
+  
   if (ltc === sellCurrency && uah === buyCurrency || uah === sellCurrency && ltc === buyCurrency) {
     formulaDefault(courseLtc, courseUsdUah, 'crypt');
   }
-
+  
+  if (bnb === sellCurrency && uah === buyCurrency || uah === sellCurrency && bnb === buyCurrency) {
+    formulaDefault(courseBnb, courseUsdUah, 'crypt')
+  }
+  
   if (eth === sellCurrency && uah === buyCurrency || uah === sellCurrency && eth === buyCurrency) {
     formulaDefault(courseEth, courseUsdUah, 'crypt');
   }
-
+  
   if (doge === sellCurrency && uah === buyCurrency || uah === sellCurrency && doge === buyCurrency) {
     formulaDefault(courseDoge, courseUsdUah, 'crypt');
   }
-
+  
   if (tron === sellCurrency && uah === buyCurrency || uah === sellCurrency && tron === buyCurrency) {
     formulaDefault(courseTron, courseUsdUah, 'crypt');
   }
-
+  
   //Crypt - Euro
   if (btc === sellCurrency && eur === buyCurrency || eur === sellCurrency && btc === buyCurrency) {
     formulaDefault(courseBtcEur);
   }
-
+  
   if (eth === sellCurrency && eur === buyCurrency || eur === sellCurrency && eth === buyCurrency) {
     formulaDefault(courseEthEur);
   }
-
-
+  
+  
   function searchMatches(currency, name) {
     if (buyCurrency === currency || sellCurrency === currency) {
       if (name === "rub") {
@@ -785,8 +802,8 @@ function calculationsData(params, sing) {
         eur = currency
     }
   }
-
-
+  
+  
   function formulaDefault(mainCourse, course, value) {
     params.value = params.data.course.min_max_percent;
     let res
@@ -809,15 +826,15 @@ function calculationsData(params, sing) {
         res = (res * course).toFixed(4);
       }
     }
-
-
+    
+    
     if (params.data.course.min_course !== "1") {
       rowNode.setDataValue([`course.min_course`], +res);
     } else {
       rowNode.setDataValue([`course.max_course`], +res)
     }
-
-
+    
+    
   }
 }
 
@@ -843,7 +860,7 @@ buttonChange.forEach(item => {
   let startTimer
   let dataInput = item.getAttribute('data-input');
   let input = document.querySelector(`.${dataInput}`);
-
+  
   item.addEventListener('mousedown', function () {
     clearInterval(timer)
     clearTimeout(startTimer)
@@ -865,7 +882,7 @@ buttonChange.forEach(item => {
       buyCurrency.dispatchEvent(new Event("change"));
     }
   })
-
+  
   function calculator() {
     let dataSign = item.getAttribute('data-sign');
     let number = Number(input.value);
