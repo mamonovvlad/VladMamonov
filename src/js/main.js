@@ -22,6 +22,7 @@ let template_id = localStorage.getItem('template_id'),
   data = [],
   courseUsdRub,
   courseUsdUah,
+  courseEurUsd,
   courseUahRub,
   courseEthEur,
   courseBtcEur,
@@ -63,10 +64,8 @@ const gridOptions = {
       valueGetter: function (params) {
         let sell = parseFloat(params.node.data.course.sell);
         let buy = parseFloat(params.node.data.course.buy);
-        
         let buyCur = params.node.data.buyCurrency.id;
         let sellCur = params.node.data.sellCurrency.id;
-        
         let usdId = ['1', '2', '6', '7', '8', '12', '28', '29', '30', '42'];
         let uahId = ['3', '5', '26', '31', '35', '43', '44', '45'];
         let rubId = ['9', '11', '13', '14', '15', '16', '17', '18', '23', '24', '37', '40'];
@@ -84,7 +83,6 @@ const gridOptions = {
             return sell.toFixed(number);
           }
         }
-        
       },
       valueSetter: function (params) {
         let sell = parseFloat(params.data.course.sell);
@@ -343,7 +341,6 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 
-//Receiving users  - loading 1
 function receivingUsers() {
   let url = proxy +
     encodeURIComponent(
@@ -368,11 +365,10 @@ function receivingUsers() {
       users.append(option);
     });
     receivingTemplate();
-    gettingCourses();
   });
 }
 
-//Receiving template - loading 2
+
 function receivingTemplate() {
   let url = proxy +
     encodeURIComponent(
@@ -413,7 +409,7 @@ function receivingTemplate() {
   });
 }
 
-//Receiving courses - loading 3
+
 function gettingCourses() {
   let url = proxy +
     encodeURIComponent(
@@ -433,6 +429,8 @@ function gettingCourses() {
         courseUsdRub = Number(value.value);
       } else if (value.name === 'uah_rub_course') {
         courseUahRub = Number(value.value);
+      } else if (value.name === 'eur_usd_course') {
+        courseEurUsd = Number(value.value)
       } else if (value.name === 'bitcoin_course') {
         data = JSON.parse(value.value);
         courseBtc = Number(data.usd);
@@ -669,6 +667,7 @@ function calculationsData(params, sing) {
     searchMatches(currency, 'eur')
   })
   
+  
   if (rub === sellCurrency && usd === buyCurrency || usd === sellCurrency && rub === buyCurrency) {
     formulaDefault(courseUsdRub)
   }
@@ -680,6 +679,11 @@ function calculationsData(params, sing) {
   if (uah === sellCurrency && rub === buyCurrency || rub === sellCurrency && uah === buyCurrency) {
     formulaDefault(courseUahRub)
   }
+  
+  if (eur === sellCurrency && usd === buyCurrency || usd === sellCurrency && eur === buyCurrency) {
+    console.log(courseEurUsd)
+  }
+  
   
   //Crypt - Usd
   if (btc === sellCurrency && usd === buyCurrency || usd === sellCurrency && btc === buyCurrency) {

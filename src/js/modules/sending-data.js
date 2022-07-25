@@ -7,7 +7,7 @@ const updateTable = (data) => {
       `https://${name}/v1/course/change-course?access-token=EFjko3OineBf8RQCth33wpC0dZqM4CyO&_format=json`
     ) +
     '&method=POST&data=' + encodeURIComponent(data);
-
+  
   fetch(url, {
       method: "POST",
       headers: {
@@ -17,7 +17,7 @@ const updateTable = (data) => {
     }
   ).then(function (res) {
   })
-
+  
 }
 
 const changeMultiple = (data) => {
@@ -29,9 +29,9 @@ const changeMultiple = (data) => {
       `https://${name}/v1/course/change-multiple-course?access-token=EFjko3OineBf8RQCth33wpC0dZqM4CyO&_format=json`
     ) +
     '&method=POST&data=' + encodeURIComponent(courses);
-
+  
   fetch(url, {
-
+      
       method: "POST",
       headers: {
         'Content-Type': 'application/json;charset=utf-8',
@@ -40,7 +40,7 @@ const changeMultiple = (data) => {
     }
   ).then(function (res) {
   })
-
+  
 }
 
 const changeCourseCity = (data) => {
@@ -49,7 +49,7 @@ const changeCourseCity = (data) => {
       `https://${name}/v1/course-city/change?access-token=EFjko3OineBf8RQCth33wpC0dZqM4CyO&_format=json`
     ) +
     '&method=POST&data=' + encodeURIComponent(data);
-
+  
   fetch(url, {
       method: "POST",
       headers: {
@@ -59,7 +59,7 @@ const changeCourseCity = (data) => {
     }
   ).then(function (res) {
   })
-
+  
 }
 
 

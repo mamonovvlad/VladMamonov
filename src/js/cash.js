@@ -1,7 +1,8 @@
 import {instruments} from "./modules/instruments.js";
 import tableEnlargement from './modules/table-enlargement.js'
 import {nav} from "./modules/nav.js";
-import {changeCourseCity, updateTable} from "./modules/sending-data.js";
+import {changeCourseCity} from "./modules/sending-data.js";
+import openWindow from "./modules/open-window.js";
 
 const proxy = "/proxy.php?url=",
   turnOff = document.querySelector('.turn-off'),
@@ -30,7 +31,10 @@ const gridOptions = {
       headerName: 'НАЗВАНИЕ',
       field: 'title',
       minWidth: 60,
-      sort: "asc"
+      // sort: "asc",
+      cellRenderer: (params) => {
+        return openWindow(params, 1)
+      }
     },
     {
       sortIndex: 2,
@@ -106,18 +110,18 @@ const gridOptions = {
       }
     }
   ],
-
-
+  
+  
   defaultColDef: {
     resizable: true,
     suppressMovable: true,
   },
   rowHeight: 40,
-
+  
   onGridReady: function (params) {
     params.api.sizeColumnsToFit();
   },
-
+  
   getRowStyle: function (params) {
     if (params.data.is_primary !== 1) {
       return {background: '#e7e6e6'}
@@ -164,9 +168,9 @@ function receivingTable() {
           res.forEach((row) => {
             if (row.is_primary === 1) {
               newArr.push(row);
+              
             }
           })
-
           if (localStorage.getItem('remove_rows')) {
             removeRows.forEach((item) => {
               idxRemove.push(Number(item))
@@ -224,24 +228,24 @@ function checkbox(params, cls, col) {
   input.setAttribute('data-idx', rowNode.rowIndex);
   input.className = `default-checkbox ${cls}`
   input.checked = params.value === 1;
-
-
+  
+  
   input.addEventListener('change', function (event) {
     let inpPercent = document.querySelectorAll('.inp__is_percent');
     let inpRate = document.querySelectorAll('.inp__is_rate');
-
+    
     if (params.value === 0) {
       params.value = 1;
     } else {
       params.value = 0;
     }
-
+    
     let data = JSON.stringify({
       id: params.data.id,
       field: params.colDef.field,
       value: params.value
     })
-
+    
     if (this.classList.contains('inp__is_rate')) {
       inpPercent.forEach(item => {
         if (item.getAttribute('data-idx') === String(params.rowIndex)) {
@@ -265,7 +269,7 @@ function checkbox(params, cls, col) {
         gridOptions.api.redrawRows({rowNodes: [rowNode], columns: ['rate_diff_percent']})
       }, 500)
     }
-
+    
     if (this.classList.contains('inp__is_percent')) {
       inpRate.forEach(item => {
         if (item.getAttribute('data-idx') === String(params.rowIndex)) {
@@ -285,7 +289,7 @@ function checkbox(params, cls, col) {
         }
       })
     }
-
+    
     changeCourseCity(data)
   });
   return input;
@@ -294,22 +298,22 @@ function checkbox(params, cls, col) {
 if (enableAll) {
   enableAll.addEventListener('click', () => {
     let data;
-
+    
     res.forEach(item => {
       item.active = 1;
-
+      
       data = JSON.stringify({
         id: item.id,
         field: 'active',
         value: item.active
       })
-
+      
       changeCourseCity(data)
-
+      
     })
-
+    
     gridOptions.api.setRowData(newArr)
-
+    
   })
 }
 
@@ -345,12 +349,12 @@ function refreshRows(params) {
   let buttons = document.createElement('span');
   buttons.classList.add('buttons__icons');
   buttons.innerHTML = `${'' + ++params.rowIndex}  <button class="btn btn__open" style="display: none"  data-row-idx="${params.data.id}">Открыть</button>`;
-
+  
   if (params.data.is_primary) {
     let showBtn = buttons.querySelector('.btn__open');
     showBtn.style.display = 'block';
   }
-
+  
   let btnOpen = buttons.querySelector('.btn__open');
   btnOpen.addEventListener('click', function () {
     openList(btnOpen, res, params, gridOptions);
@@ -371,8 +375,8 @@ function openList(btn, res, params, gridOptions) {
       items.push(item)
     }
   })
-
-
+  
+  
   let newStore = newArr.slice();
   for (let i = 0; i < items.length; i++) {
     let newItem = items[i];
