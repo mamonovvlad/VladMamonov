@@ -31,7 +31,7 @@ const gridOptions = {
       headerName: 'НАЗВАНИЕ',
       field: 'title',
       minWidth: 60,
-      // sort: "asc",
+      sort: "asc",
       cellRenderer: (params) => {
         return openWindow(params, 1)
       }
