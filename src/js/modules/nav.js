@@ -6,7 +6,6 @@ export function nav(gridOptions, template) {
     sizeToFit = document.querySelector('.size-to-fit'),
     verificationInput = document.querySelectorAll('.verification-input'),
     closeBurger = document.querySelector('.close__burger'),
-    resetColumns = document.querySelector('.reset__columns'),
     resetRow = document.querySelector('.reset__row');
 
 
@@ -71,14 +70,7 @@ export function nav(gridOptions, template) {
     localStorage.setItem('size', '1')
     gridOptions.api.sizeColumnsToFit();
   }
-
-///
-  if (resetColumns) {
-    resetColumns.addEventListener('click', () => {
-      localStorage.removeItem('hide');
-    })
-  }
-
+  
 
   if (resetRow) {
     resetRow.addEventListener('click', () => {
