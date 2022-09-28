@@ -9,19 +9,20 @@ const proxy = "/proxy.php?url=",
   enableAll = document.querySelector('.enable-all');
 
 let res = [],
-  idxRemove = [],
   newArr = [],
-  selectedIds,
-  removeRows = JSON.parse(localStorage.getItem('remove_rows'));
+  selectedIds;
 
 ////////////////////////////////////////Table////////////////////////////////
 
 const gridOptions = {
+  
   columnDefs: [
     {
       sortIndex: 0,
       headerName: '№',
-      width: 100,
+      field: 'buyCurrency.symbol',
+      sort: 'asc',
+      width: 70,
       cellRenderer: params => {
         return refreshRows(params, gridOptions);
       }
@@ -31,7 +32,7 @@ const gridOptions = {
       headerName: 'НАЗВАНИЕ',
       field: 'title',
       minWidth: 60,
-      sort: "asc",
+      sort: 'asc',
       cellRenderer: (params) => {
         return openWindow(params, 1)
       }
@@ -112,12 +113,7 @@ const gridOptions = {
   ],
   
   
-  defaultColDef: {
-    resizable: true,
-    suppressMovable: true,
-  },
   rowHeight: 40,
-  
   onGridReady: function (params) {
     params.api.sizeColumnsToFit();
   },
@@ -163,62 +159,17 @@ function receivingTable() {
       dataType: "json",
     })
     .then(data => {
-        if (data !== undefined) {
-          res = JSON.parse(JSON.stringify(data));
-          res.forEach((row) => {
-            if (row.is_primary === 1) {
-              newArr.push(row);
-              
-            }
-          })
-          if (localStorage.getItem('remove_rows')) {
-            removeRows.forEach((item) => {
-              idxRemove.push(Number(item))
-              idxRemove.sort();
-            })
-            selectedIds = idxRemove.map(function (rowNode) {
-              return rowNode;
-            });
-            newArr = newArr.filter(function (dataItem) {
-              return selectedIds.indexOf(dataItem.id) < 0;
-            });
-            gridOptions.api.setRowData(newArr);
-            deleteRows(idxRemove)
-          } else {
-            gridOptions.api.setRowData(newArr);
+      if (data !== undefined) {
+        res = JSON.parse(JSON.stringify(data));
+        res.forEach((row) => {
+          if (row.is_primary === 1 && row.is_archive === 0) {
+            console.log(newArr)
+            newArr.push(row);
           }
-        }
+        })
+        gridOptions.api.setRowData(newArr);
       }
-    )
-  ;
-}
-
-
-const deleteRows = (rows) => {
-  rows.forEach(row => {
-    let li;
-    li = document.createElement('li')
-    li.innerHTML =
-      `
-      <label>
-        <input type="checkbox" class="default-checkbox row__item" data-row-idx="${row}">
-        <span>${row}</span>
-      </label>
-      `
-    document.getElementById('filter-row').append(li)
-  })
-  let rowItem = document.querySelectorAll('.row__item');
-  rowItem.forEach(item => {
-    item.addEventListener('change', () => {
-      rows.forEach(row => {
-        if (row === Number(item.getAttribute('data-row-idx'))) {
-          let index = rows.findIndex(item => item === row)
-          rows.splice(index, 1);
-          localStorage.setItem('remove_rows', JSON.stringify(rows))
-        }
-      })
-    })
-  })
+    });
 }
 
 function checkbox(params, cls, col) {
@@ -372,7 +323,9 @@ function openList(btn, res, params, gridOptions) {
   }
   res.forEach((item, idx) => {
     if (buy === item.buyCurrency.code && sell === item.sellCurrency.code && item.is_primary === 0) {
-      items.push(item)
+      if (item.is_archive === 0) {
+        items.push(item)
+      }
     }
   })
   
