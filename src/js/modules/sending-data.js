@@ -1,5 +1,5 @@
 const proxy = "/proxy.php?url=",
-  name = 'api.7money.c';
+  name = 'api.7money.co';
 
 const updateTable = (data) => {
   let url = proxy +
