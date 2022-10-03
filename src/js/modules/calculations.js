@@ -1,3 +1,20 @@
+import {
+  courseUsdRub,
+  courseUsdUah,
+  courseEurUsd,
+  courseUahRub,
+  courseEthEur,
+  courseBtcEur,
+  courseBtc,
+  courseDash,
+  courseZec,
+  courseLtc,
+  courseBnb,
+  courseEth,
+  courseDoge,
+  courseTron
+} from "./getting-courses.js";
+
 const usdId = ['1', '2', '6', '7', '8', '12', '28', '29', '30', '42'];
 const uahId = ['3', '5', '26', '31', '35', '43', '44', '45'];
 const rubId = ['9', '11', '13', '14', '15', '16', '17', '18', '23', '24', '37', '40'];
@@ -16,23 +33,9 @@ const doge = '39';
 const tron = '46';
 const bnb = '49';
 
-let courseUsdRub,
-  courseUsdUah,
-  courseEurUsd,
-  courseUahRub,
-  courseEthEur,
-  courseBtcEur,
-  courseBtc,
-  courseDash,
-  courseZec,
-  courseLtc,
-  courseBnb,
-  courseEth,
-  courseDoge,
-  courseTron;
 
-export  default function calculationsData(params, sing) {
-  let rowNode = gridOptions.api.getDisplayedRowAtIndex(`${params.node.rowIndex}`);
+export default function calculationsData(params, sing) {
+  let rowNode = params.api.getDisplayedRowAtIndex(`${params.node.rowIndex}`);
   let buyCurrency = params.node.data.buyCurrency.id;
   let sellCurrency = params.node.data.sellCurrency.id;
   

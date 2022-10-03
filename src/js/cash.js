@@ -91,11 +91,10 @@ const gridOptions = {
         if (params.oldValue !== params.newValue) {
           params.newValue = params.newValue.replace(/,/, '.');
           params.data.course.min_max_percent = params.newValue;
-          // calculationsData(params)
         }
       },
       cellRenderer: function (params) {
-        return buttonsRenderer(params, gridOptions)
+        return buttonsRenderer(params, gridOptions, 1)
       }
     },
     {
