@@ -2,7 +2,10 @@ import {instruments} from "./modules/instruments.js";
 import tableEnlargement from './modules/table-enlargement.js'
 import {nav} from "./modules/nav.js";
 import {changeCourseCity} from "./modules/sending-data.js";
+import buttonsRenderer from './modules/buttons-renderer.js'
 import openWindow from "./modules/open-window.js";
+import toggleCheckbox from "./modules/toggleCheckbox.js";
+
 
 const proxy = "/proxy.php?url=",
   turnOff = document.querySelector('.turn-off'),
@@ -18,17 +21,15 @@ const gridOptions = {
   
   columnDefs: [
     {
-      sortIndex: 0,
       headerName: '№',
       field: 'buyCurrency.symbol',
       sort: 'asc',
-      width: 70,
+      width: 80,
       cellRenderer: params => {
         return refreshRows(params, gridOptions);
       }
     },
     {
-      sortIndex: 1,
       headerName: 'НАЗВАНИЕ',
       field: 'title',
       minWidth: 60,
@@ -38,15 +39,14 @@ const gridOptions = {
       }
     },
     {
-      sortIndex: 2,
       headerName: 'ГОРОД',
       field: 'city.name_ru',
+      width: 100,
     },
     {
-      sortIndex: 3,
       headerName: 'АКТИВОСТЬ',
       field: "active",
-      width: 120,
+      width: 100,
       cellClass: params => {
         return 'field-active';
       },
@@ -55,7 +55,6 @@ const gridOptions = {
       }
     },
     {
-      sortIndex: 4,
       headerName: 'КУРС',
       width: 120,
       cellClass: params => {
@@ -67,25 +66,11 @@ const gridOptions = {
       field: 'rate'
     },
     {
-      sortIndex: 5,
-      headerName: 'КУРС АКТИВЕН',
+      headerName: 'ТОП КУРС БЭСТА',
       width: 120,
-      field: "is_rate",
-      cellRenderer: function (params) {
-        return checkbox(params, 'inp__is_rate', 'is_rate')
-      }
+      field: "course.market_course",
     },
     {
-      sortIndex: 5,
-      headerName: 'ПРОЦЕНТ АКТИВЕН',
-      width: 120,
-      field: "is_percent",
-      cellRenderer: function (params) {
-        return checkbox(params, 'inp__is_percent', 'is_percent')
-      }
-    },
-    {
-      sortIndex: 6,
       headerName: 'ПРОЦЕНТ',
       width: 120,
       field: "rate_diff_percent",
@@ -97,19 +82,65 @@ const gridOptions = {
       },
     },
     {
-      sortIndex: 8,
-      headerName: 'ТОП КУРС БЭСТА',
-      width: 120,
-      field: "course.market_course",
+      headerName: 'ПРОЦЕНТ БИРЖИ +-',
+      width: 100,
+      suppressMovable: true,
+      editable: true,
+      field: "course.min_max_percent",
+      valueSetter: function (params) {
+        if (params.oldValue !== params.newValue) {
+          params.newValue = params.newValue.replace(/,/, '.');
+          params.data.course.min_max_percent = params.newValue;
+          // calculationsData(params)
+        }
+      },
+      cellRenderer: function (params) {
+        return buttonsRenderer(params, gridOptions)
+      }
     },
     {
-      sortIndex: 9,
+      headerName: 'ПРИВЯЗАТЬ К БИРЖЕ ?',
+      width: 100,
+      editable: false,
+      suppressMovable: true,
+      field: "course.link_to_exchange",
+      cellRenderer: function (params) {
+        return toggleCheckbox(params, 0)
+      }
+    },
+    {
+      headerName: 'ПАРСИТЬ ?',
+      width: 100,
+      editable: false,
+      suppressMovable: true,
+      field: 'course.is_parse',
+      cellRenderer: function (params) {
+        return toggleCheckbox(params, 0)
+      }
+    },
+    {
+      headerName: 'КУРС АКТИВЕН',
+      width: 120,
+      field: "is_rate",
+      cellRenderer: function (params) {
+        return checkbox(params, 'inp__is_rate', 'is_rate')
+      }
+    },
+    {
+      headerName: 'ПРОЦЕНТ АКТИВЕН',
+      width: 120,
+      field: "is_percent",
+      cellRenderer: function (params) {
+        return checkbox(params, 'inp__is_percent', 'is_percent')
+      }
+    },
+    {
       headerName: 'ИНСТРУМЕНТЫ',
       width: 100,
       cellRenderer: params => {
         return instruments(params, gridOptions, res)
       }
-    }
+    },
   ],
   
   
@@ -163,7 +194,6 @@ function receivingTable() {
         res = JSON.parse(JSON.stringify(data));
         res.forEach((row) => {
           if (row.is_primary === 1 && row.is_archive === 0) {
-            console.log(newArr)
             newArr.push(row);
           }
         })
@@ -173,8 +203,8 @@ function receivingTable() {
 }
 
 function checkbox(params, cls, col) {
-  let rowNode = gridOptions.api.getDisplayedRowAtIndex(`${params.node.rowIndex}`);
   let input = document.createElement('input');
+  let rowNode = gridOptions.api.getDisplayedRowAtIndex(`${params.node.rowIndex}`);
   input.type = "checkbox";
   input.setAttribute('data-idx', rowNode.rowIndex);
   input.className = `default-checkbox ${cls}`

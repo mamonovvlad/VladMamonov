@@ -9,26 +9,26 @@ export default function buttonsRenderer(params, gridOptions, calculationsData) {
     buyCurrency = document.querySelector('.buy-currency'),
     buttons = document.createElement("div");
 
-  let rowNode = gridOptions.api.getDisplayedRowAtIndex(`${params.node.rowIndex}`),
-    originalIds = rowNode.data.template.primary_currency_ids,
-    timer,
-    startTimer;
+  let rowNode = gridOptions.api.getDisplayedRowAtIndex(`${params.node.rowIndex}`);
+  //   originalIds = rowNode.data.template.primary_currency_ids,
+  //   timer,
+  //   startTimer;
+  
 
-
-  if (originalIds !== null && originalIds !== "" && typeof originalIds === 'string') {
-    originalIds.split(',').map(function (item) {
-      if (rowNode.data.sellCurrency.id === item) {
-        sellCurrency.placeholder = `${rowNode.data.sellCurrency.name_ru} на что-то`;
-        sellCurrency.setAttribute('data-primary_currency_ids', `${params.data.template.primary_currency_ids}`)
-      } else if (rowNode.data.buyCurrency.id === item) {
-        buyCurrency.placeholder = `Что-то на  ${rowNode.data.buyCurrency.name_ru}`
-        buyCurrency.setAttribute('data-primary_currency_ids', `${params.data.template.primary_currency_ids}`)
-      }
-    });
-  } else {
-    sellCurrency.placeholder = `Валюта не назначена`
-    buyCurrency.placeholder = `Валюта не назначена`
-  }
+  // if (originalIds !== null && originalIds !== "" && typeof originalIds === 'string') {
+  //   originalIds.split(',').map(function (item) {
+  //     if (rowNode.data.sellCurrency.id === item) {
+  //       sellCurrency.placeholder = `${rowNode.data.sellCurrency.name_ru} на что-то`;
+  //       sellCurrency.setAttribute('data-primary_currency_ids', `${params.data.template.primary_currency_ids}`)
+  //     } else if (rowNode.data.buyCurrency.id === item) {
+  //       buyCurrency.placeholder = `Что-то на  ${rowNode.data.buyCurrency.name_ru}`
+  //       buyCurrency.setAttribute('data-primary_currency_ids', `${params.data.template.primary_currency_ids}`)
+  //     }
+  //   });
+  // } else {
+  //   sellCurrency.placeholder = `Валюта не назначена`
+  //   buyCurrency.placeholder = `Валюта не назначена`
+  // }
 
 
   buttons.className = 'min_max_percent'
