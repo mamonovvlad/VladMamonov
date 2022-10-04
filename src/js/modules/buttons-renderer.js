@@ -1,5 +1,5 @@
 import {pauseTimeout, startTimeout, timeout} from "./timeout.js";
-import {updateTable, changeCourseCity} from "./sending-data.js";
+import {updateTable} from "./sending-data.js";
 import debounce from "./debounce.js";
 import calculationsData from './calculations.js'
 
@@ -99,7 +99,7 @@ export default function buttonsRenderer(params, gridOptions, send) {
       startTimeout();
       updateTable(data);
     } else if (send === 1) {
-      changeCourseCity(data)
+      updateTable(data);
     } else {
       return false
     }

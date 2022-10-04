@@ -136,8 +136,7 @@ const gridOptions = {
       suppressMovable: true,
       field: "course.link_to_exchange",
       cellRenderer: function (params) {
-        let col = 'link_to_exchange'
-        return toggleCheckbox(params, 0,col)
+        return toggleCheckbox(params, 0)
       }
     },
     {
