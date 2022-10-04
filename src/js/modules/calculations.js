@@ -15,29 +15,30 @@ import {
   courseTron
 } from "./getting-courses.js";
 
-const usdId = ['1', '2', '6', '7', '8', '12', '28', '29', '30', '42'];
-const uahId = ['3', '5', '26', '31', '35', '43', '44', '45'];
-const rubId = ['9', '11', '13', '14', '15', '16', '17', '18', '23', '24', '37', '40'];
-const eurId = ['32', '48'];
+const usdId = [1, 2, 6, 7, 8, 12, 28, 29, 30, 42];
+const uahId = [3, 5, 26, 31, 35, 43, 44, 45];
+const rubId = [9, 11, 13, 14, 15, 16, 17, 18, 23, 24, 37, 40];
+const eurId = [32, 48];
 
 let rub;
 let usd;
 let uah;
 let eur
-const btc = '4';
-const dash = '20';
-const zec = '21';
-const ltc = '19';
-const eth = '25';
-const doge = '39';
-const tron = '46';
-const bnb = '49';
+const btc = 4;
+const dash = 20;
+const zec = 21;
+const ltc = 19;
+const eth = 25;
+const doge = 39;
+const tron = 46;
+const bnb = 49;
 
 
 export default function calculationsData(params, sing) {
+  
   let rowNode = params.api.getDisplayedRowAtIndex(`${params.node.rowIndex}`);
-  let buyCurrency = params.node.data.buyCurrency.id;
-  let sellCurrency = params.node.data.sellCurrency.id;
+  let buyCurrency = Number(params.node.data.buyCurrency.id);
+  let sellCurrency = Number(params.node.data.sellCurrency.id);
   
   rubId.forEach(currency => {
     searchMatches(currency, 'rub')
@@ -55,7 +56,7 @@ export default function calculationsData(params, sing) {
     searchMatches(currency, 'eur')
   })
   
-
+  
   if (rub === sellCurrency && usd === buyCurrency || usd === sellCurrency && rub === buyCurrency) {
     formulaDefault(courseUsdRub)
   }
@@ -74,7 +75,6 @@ export default function calculationsData(params, sing) {
   
   //Crypt - Usd
   if (btc === sellCurrency && usd === buyCurrency || usd === sellCurrency && btc === buyCurrency) {
-    console.log(courseBtc)
     formulaDefault(courseBtc)
   }
   
@@ -183,6 +183,7 @@ export default function calculationsData(params, sing) {
   
   
   function searchMatches(currency, name) {
+    
     if (buyCurrency === currency || sellCurrency === currency) {
       if (name === "rub") {
         rub = currency;
@@ -190,8 +191,9 @@ export default function calculationsData(params, sing) {
         uah = currency;
       } else if (name === 'usd') {
         usd = currency;
-      } else if (name === 'eur')
-        eur = currency
+      } else if (name === 'eur') {
+        eur = currency;
+      }
     }
   }
   
@@ -218,9 +220,8 @@ export default function calculationsData(params, sing) {
         res = (res * course).toFixed(4);
       }
     }
-  
-
-    if (params.data.course.min_course !== "1") {
+    
+    if (params.data.course.min_course !== "1" && params.data.course.min_course !== 1) {
       rowNode.setDataValue([`course.min_course`], +res);
     } else {
       rowNode.setDataValue([`course.max_course`], +res)

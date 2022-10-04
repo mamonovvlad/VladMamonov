@@ -59,8 +59,25 @@ const changeCourseCity = (data) => {
     }
   ).then(function (res) {
   })
+}
+
+const changeCourse = (data) => {
+  let url = proxy +
+    encodeURIComponent(
+      `https://${name}/v1/course/change?access-token=EFjko3OineBf8RQCth33wpC0dZqM4CyO&_format=json`
+    ) +
+    '&method=POST&data=' + encodeURIComponent(data);
+  
+  fetch(url, {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json;charset=utf-8'
+      },
+      body: data
+    }
+  ).then(function (res) {
+  })
   
 }
 
-
-export {updateTable, changeMultiple, changeCourseCity};
+export {updateTable, changeMultiple, changeCourseCity,changeCourse};

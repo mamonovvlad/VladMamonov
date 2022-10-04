@@ -1,7 +1,7 @@
-import {changeCourseCity, updateTable} from "./sending-data.js";
+import {changeCourse, changeCourseCity, updateTable} from "./sending-data.js";
 
 
-export default function toggleCheckbox(params, num) {
+export default function toggleCheckbox(params, send) {
   let input = document.createElement('input');
   let rowNode = params.api.getDisplayedRowAtIndex(`${params.node.rowIndex}`);
   input.type = "checkbox";
@@ -25,9 +25,9 @@ export default function toggleCheckbox(params, num) {
       })
       
       
-      if (num === 0) {
-        changeCourseCity(data)
-      } else if (num === 1) {
+      if (send === 0) {
+        changeCourse(data)
+      } else if (send === 1) {
         updateTable(data)
       } else {
         return false
