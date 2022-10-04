@@ -1,14 +1,13 @@
 import {pauseTimeout, startTimeout, timeout} from "./timeout.js";
 import {updateTable, changeCourseCity} from "./sending-data.js";
 import debounce from "./debounce.js";
+import calculationsData from './calculations.js'
 
-
-export default function buttonsRenderer(params, gridOptions, number, calculationsData) {
+export default function buttonsRenderer(params, gridOptions, send) {
   
   const sellCurrency = document.querySelector('.sell-currency'),
     buyCurrency = document.querySelector('.buy-currency'),
     buttons = document.createElement("div");
-  
   let rowNode = gridOptions.api.getDisplayedRowAtIndex(`${params.node.rowIndex}`);
   
   if (rowNode.data.template !== undefined) {
@@ -28,7 +27,6 @@ export default function buttonsRenderer(params, gridOptions, number, calculation
       buyCurrency.placeholder = `Валюта не назначена`
     }
   }
-  
   
   buttons.className = 'min_max_percent'
   buttons.innerHTML = `
@@ -59,10 +57,10 @@ export default function buttonsRenderer(params, gridOptions, number, calculation
     
     //При клике (Отправка)
     item.addEventListener('click', debounce((e) => {
-      if (number === 0) {
+      if (send === 0) {
         clearInterval(timeout);
-        calculationsData(params, e.target.dataset.sign)
       }
+      calculationsData(params, e.target.dataset.sign)
       sendData();
     }, 500));
     
@@ -71,7 +69,7 @@ export default function buttonsRenderer(params, gridOptions, number, calculation
   
   function editData(sing) {
     calculator(sing)
-    if (number === 0) {
+    if (send === 0) {
       pauseTimeout();
     }
     
@@ -95,10 +93,12 @@ export default function buttonsRenderer(params, gridOptions, number, calculation
       field: params.column.colId,
       value: String(number)
     })
-    if (number === 0) {
+    
+    
+    if (send === 0) {
       startTimeout();
       updateTable(data);
-    } else if (number === 1) {
+    } else if (send === 1) {
       changeCourseCity(data)
     } else {
       return false

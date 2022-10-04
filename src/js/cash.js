@@ -4,7 +4,9 @@ import {nav} from "./modules/nav.js";
 import {changeCourseCity} from "./modules/sending-data.js";
 import buttonsRenderer from './modules/buttons-renderer.js'
 import openWindow from "./modules/open-window.js";
-import toggleCheckbox from "./modules/toggleCheckbox.js";
+import toggleCheckbox from "./modules/toggle-checkbox.js";
+import {gettingCourses} from './modules/getting-courses.js'
+import calculationsData from './modules/calculations.js'
 
 
 const proxy = "/proxy.php?url=",
@@ -54,6 +56,7 @@ const gridOptions = {
         return checkbox(params, 'inp__active', 'active')
       }
     },
+    
     {
       headerName: 'КУРС',
       width: 120,
@@ -82,6 +85,34 @@ const gridOptions = {
       },
     },
     {
+      sortIndex: 4,
+      headerName: 'МИН',
+      width: 70,
+      suppressMovable: true,
+      field: 'course.min_course',
+      editable: false,
+      cellClass: params => {
+        return 'field-change';
+      },
+      cellRenderer: function (params) {
+        return `${params.data.course.min_course}`
+      }
+    },
+    {
+      sortIndex: 5,
+      headerName: 'МАКС',
+      field: "course.max_course",
+      width: 70,
+      suppressMovable: true,
+      editable: false,
+      cellClass: params => {
+        return 'field-change';
+      },
+      cellRenderer: function (params) {
+        return `${params.data.course.max_course}`
+      }
+    },
+    {
       headerName: 'ПРОЦЕНТ БИРЖИ +-',
       width: 100,
       suppressMovable: true,
@@ -91,10 +122,11 @@ const gridOptions = {
         if (params.oldValue !== params.newValue) {
           params.newValue = params.newValue.replace(/,/, '.');
           params.data.course.min_max_percent = params.newValue;
+          calculationsData(params)
         }
       },
       cellRenderer: function (params) {
-        return buttonsRenderer(params, gridOptions, 1)
+        return buttonsRenderer(params, gridOptions, 1,calculationsData)
       }
     },
     {
@@ -173,6 +205,7 @@ const gridOptions = {
 document.addEventListener('DOMContentLoaded', function () {
   const table = document.getElementById('table');
   new agGrid.Grid(table, gridOptions);
+  gettingCourses();
   receivingTable();
 });
 

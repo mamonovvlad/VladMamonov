@@ -24,8 +24,6 @@ export default function toggleCheckbox(params, num) {
         value: params.value
       })
       
-      console.log(data)
-      
       
       if (num === 0) {
         changeCourseCity(data)

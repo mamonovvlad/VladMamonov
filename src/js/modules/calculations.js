@@ -55,7 +55,7 @@ export default function calculationsData(params, sing) {
     searchMatches(currency, 'eur')
   })
   
-  
+
   if (rub === sellCurrency && usd === buyCurrency || usd === sellCurrency && rub === buyCurrency) {
     formulaDefault(courseUsdRub)
   }
@@ -72,9 +72,9 @@ export default function calculationsData(params, sing) {
     console.log(courseEurUsd)
   }
   
-  
   //Crypt - Usd
   if (btc === sellCurrency && usd === buyCurrency || usd === sellCurrency && btc === buyCurrency) {
+    console.log(courseBtc)
     formulaDefault(courseBtc)
   }
   
@@ -218,8 +218,8 @@ export default function calculationsData(params, sing) {
         res = (res * course).toFixed(4);
       }
     }
-    
-    
+  
+
     if (params.data.course.min_course !== "1") {
       rowNode.setDataValue([`course.min_course`], +res);
     } else {

@@ -196,7 +196,7 @@ const gridOptions = {
         }
       },
       cellRenderer: function (params) {
-        return buttonsRenderer(params, gridOptions,0,calculationsData)
+        return buttonsRenderer(params, gridOptions,0)
       }
     },
     {
@@ -448,7 +448,6 @@ function checkbox(params, col) {
         params.value = '0';
       }
       params.node.data.col = params.value;
-      
       rowNode.setDataValue(col, params.value)
       
       let data = JSON.stringify({
