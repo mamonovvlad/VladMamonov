@@ -6,8 +6,8 @@ function windowOpen(params, number = 0) {
    ${number !== 1 ? `
         <a class='icon__table' href='https://dvigmakaki.xyz/course/view?id=${params.node.data.course.id}'  target='_blank'><i class=\'far fa-eye\'></i></a>
         <a class='icon__table open-window'data-sell='${params.data.sellCurrency.code}' data-buy='${params.data.buyCurrency.code}'><i class='fas fa-chart-line'></i></a` :
-        `<a class='icon__table open-window' data-city='${params.data.city.code}'  data-sell='${params.data.sellCurrency.code}' data-buy='${params.data.buyCurrency.code}'><i class='fas fa-chart-line'></i></a>`
-    }
+    `<a class='icon__table open-window' data-city='${params.data.city.code}'  data-sell='${params.data.sellCurrency.code}' data-buy='${params.data.buyCurrency.code}'><i class='fas fa-chart-line'></i></a>`
+  }
   `
   
   let link = links.querySelector('.open-window')
@@ -43,6 +43,9 @@ const openTab = (sellCurrency, buyCurrency, getCity, number) => {
     NICE: 'nice',
     STAM: 'stam',
     ANTL: 'antl',
+    KISH: 'kish',
+    BARC: 'barc',
+    ALIC: 'alic',
   }
   const namesMap = {
     BNBBEP20: 'binance-coin',
