@@ -26,7 +26,7 @@ const gridOptions = {
       headerName: '№',
       field: 'buyCurrency.symbol',
       sort: 'asc',
-      width: 80,
+      width: 90,
       cellRenderer: params => {
         return refreshRows(params, gridOptions);
       }
@@ -173,9 +173,10 @@ const gridOptions = {
       }
     },
   ],
-  
-  
   rowHeight: 40,
+  defaultColDef: {
+    resizable: true,
+  },
   onGridReady: function (params) {
     params.api.sizeColumnsToFit();
   },
