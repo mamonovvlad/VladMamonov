@@ -94,6 +94,16 @@ button i {
     background: #fff;
 }
 
+
+.merge-cash {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+.merge-cash input{
+    margin-right: 4px;
+}
+
 /*Icon*/
 .ham {
     cursor: pointer;
@@ -330,13 +340,13 @@ button i {
 .buttons {
     display: flex;
     flex-wrap: wrap;
+    gap: 10px;
     transition: 500ms ease;
 }
 
 .buttons button,
 .buttons a {
     padding: 8px 10px;
-    margin: 5px;
     font-size: 14px;
     text-align: center;
 }
