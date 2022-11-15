@@ -51,6 +51,8 @@ const openTab = (sellCurrency, buyCurrency, getCity, number) => {
     SFA: 'sfa',
     VARN: 'varn',
     CANN: 'cann',
+    MILAN: 'milan',
+    ROME: 'rome',
   }
   const namesMap = {
     BNBBEP20: 'binance-coin',
