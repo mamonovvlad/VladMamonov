@@ -1,3 +1,4 @@
+import onRowDragEnd from './modules/row-drag.js'
 import {instruments} from "./modules/instruments.js";
 import tableEnlargement from './modules/table-enlargement.js'
 import {nav} from "./modules/nav.js";
@@ -11,12 +12,14 @@ import mergeCash from "./modules/merge-cash.js";
 
 
 const proxy = "/proxy.php?url=",
-    turnOff = document.querySelector('.turn-off'),
-    enableAll = document.querySelector('.enable-all');
+  host = "http://local.obmen.log",
+  api = "https://api.7money.co",
+  turnOff = document.querySelector('.turn-off'),
+  enableAll = document.querySelector('.enable-all');
 
 let res = [],
-    newArr = [],
-    selectedIds;
+  newArr = [],
+  newStore;
 
 ////////////////////////////////////////Table////////////////////////////////
 
@@ -27,8 +30,8 @@ const gridOptions = {
       headerName: '№',
       field: 'buyCurrency.symbol',
       sort: 'asc',
+      rowDrag: true,
       width: 120,
-      // rowDrag: true,
       cellRenderer: params => {
         return refreshRows(params, gridOptions);
       }
@@ -190,6 +193,7 @@ const gridOptions = {
   defaultColDef: {
     resizable: true,
   },
+  animateRows: true,
   onGridReady: function (params) {
     params.api.sizeColumnsToFit();
   },
@@ -217,6 +221,12 @@ const gridOptions = {
     }
     gridOptions.api.flashCells({rowNodes: [rowNode], columns: [params.colDef.field]});
   },
+
+  onRowDragMove: onRowDragMove,
+  getRowId: getRowId,
+  onRowDragEnd: () => {
+    onRowDragEnd(gridOptions, 1)
+  }
 };
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -229,26 +239,26 @@ document.addEventListener('DOMContentLoaded', function () {
 
 function receivingTable() {
   let urlTable = proxy +
-      encodeURIComponent(
-          `https://api.7money.co/v1/course-city/all?access-token=EFjko3OineBf8RQCth33wpC0dZqM4CyO&_format=json`
-      );
+    encodeURIComponent(
+      `${api}/v1/course-city/all?access-token=EFjko3OineBf8RQCth33wpC0dZqM4CyO&_format=json`
+    );
   agGrid
-      .simpleHttpRequest({
-        url: urlTable,
-        method: 'get',
-        dataType: "json",
-      })
-      .then(data => {
-        if (data !== undefined) {
-          res = JSON.parse(JSON.stringify(data));
-          res.forEach(row => {
-            if (row.is_primary === 1 && row.is_archive === 0) {
-              newArr.push(row);
-            }
-          })
-          gridOptions.api.setRowData(newArr);
-        }
-      });
+    .simpleHttpRequest({
+      url: urlTable,
+      method: 'get',
+      dataType: "json",
+    })
+    .then(data => {
+      if (data !== undefined) {
+        res = JSON.parse(JSON.stringify(data));
+        res.forEach(row => {
+          if (row.is_primary === 1 && row.is_archive === 0) {
+            newArr.push(row);
+          }
+        })
+        gridOptions.api.setRowData(newArr);
+      }
+    });
 }
 
 function checkbox(params, cls, col) {
@@ -371,14 +381,22 @@ nav(gridOptions);
 tableEnlargement();
 mergeCash();
 
+
 function refreshRows(params) {
+  let agRowDrag = document.querySelectorAll('.ag-row-drag');
   let buttons = document.createElement('span');
   buttons.classList.add('buttons__icons');
   buttons.innerHTML = `${'' + ++params.rowIndex}  <button class="btn btn__open" style="display: none"  data-row-idx="${params.data.id}">Открыть</button>`;
 
   if (params.data.is_primary) {
     let showBtn = buttons.querySelector('.btn__open');
+
+    agRowDrag.forEach(item => {
+      if (!item.classList.contains('d-none'))
+        item.classList.add('d-none');
+    })
     showBtn.style.display = 'block';
+
   }
 
   let btnOpen = buttons.querySelector('.btn__open');
@@ -396,7 +414,7 @@ function openList(btn, res, params, gridOptions) {
     buy = params.data.buyCurrency.code;
     sell = params.data.sellCurrency.code;
   }
-  res.forEach((item, idx) => {
+  res.forEach((item) => {
     if (buy === item.buyCurrency.code && sell === item.sellCurrency.code && item.is_primary === 0) {
       if (item.is_archive === 0) {
         items.push(item)
@@ -405,17 +423,17 @@ function openList(btn, res, params, gridOptions) {
   })
 
 
-  let newStore = newArr.slice();
+  items.sort(function(a, b) {
+    return parseFloat(a.sort_order) - parseFloat(b.sort_order);
+  });
+
+  newStore = newArr.slice();
   for (let i = 0; i < items.length; i++) {
     let newItem = items[i];
     newStore.push(newItem)
+
   }
-  // gridOptions.api.applyTransaction({add: [newArr]})
-  if (selectedIds !== undefined) {
-    newStore = newStore.filter(function (dataItem) {
-      return selectedIds.indexOf(dataItem.id) < 0;
-    });
-  }
+
   gridOptions.api.setRowData(newStore);
 }
 
@@ -460,4 +478,39 @@ function updateMergeCash(id, value) {
     value: value
   })
   changeCourseCity(data)
+}
+
+
+function getRowId(params) {
+  return params.data.id;
+}
+
+function onRowDragMove(event) {
+  let movingNode = event.node;
+  let overNode = event.overNode;
+  let rowNeedsToMove = movingNode !== overNode;
+
+  if (rowNeedsToMove) {
+    let movingData = movingNode.data;
+    let overData = overNode.data;
+
+
+    let fromIndex = newStore.indexOf(movingData);
+    let toIndex = newStore.indexOf(overData);
+
+
+    let store = newStore.slice();
+    moveInArray(store, fromIndex, toIndex);
+
+    newStore = store;
+    gridOptions.api.setRowData(store);
+    // console.log(store)
+    gridOptions.api.clearFocusedCell();
+  }
+
+  function moveInArray(arr, fromIndex, toIndex) {
+    let element = arr[fromIndex];
+    arr.splice(fromIndex, 1);
+    arr.splice(toIndex, 0, element);
+  }
 }

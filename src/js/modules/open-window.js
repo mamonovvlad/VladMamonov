@@ -90,6 +90,8 @@ const openTab = (sellCurrency, buyCurrency, getCity, number) => {
     CASHEUR: 'euro-cash',
     USDTTRC20: 'tether-trc20',
     USDTERC20: 'tether-erc20',
+    CARDKZT: 'visa-mastercard-kzt',
+    KSPBKZT: 'kaspi-bank',
   };
   if (number !== 1) {
     window.open("//bestchange.ru/" + namesMap[sellCurrency] + '-to-' + namesMap[buyCurrency] + ".html", 'example', 'width=1000,height=500');

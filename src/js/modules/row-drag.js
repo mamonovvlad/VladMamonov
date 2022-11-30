@@ -1,5 +1,7 @@
 const proxy = "/proxy.php?url=",
   courseSort = "course-template",
+  host = "http://local.obmen.log",
+  api = "https://api.7money.co",
   citySort = "course-city";
 
 export default function onRowDragEnd(gridOptions, number) {
@@ -13,9 +15,10 @@ export default function onRowDragEnd(gridOptions, number) {
 
     newArr.push(arr)
   }
+
   let data = newArr.join(',')
 
-  fetch(proxy + encodeURIComponent(`https://api.7money.co/v1/${number === 1 ? citySort : courseSort}/set-sort-order-multiple-data?data=${data}&access-token=EFjko3OineBf8RQCth33wpC0dZqM4CyO&_format=json`), {
+  fetch(proxy + encodeURIComponent(`${api}/v1/${number === 1 ? citySort : courseSort}/set-sort-order-multiple-data?data=${data}&access-token=EFjko3OineBf8RQCth33wpC0dZqM4CyO&_format=json`), {
       method: 'get',
     }
   ).then(res => res.json());

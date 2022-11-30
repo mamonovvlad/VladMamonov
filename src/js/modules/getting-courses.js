@@ -3,6 +3,9 @@ export let courseUsdRub,
   courseUsdUah,
   courseEurUsd,
   courseUahRub,
+  courseUsdKzt,
+  courseRubKzt,
+  courseUahKzt,
   courseEthEur,
   courseBtcEur,
   courseBtc,
@@ -35,6 +38,12 @@ export const gettingCourses = function () {
         courseUahRub = Number(value.value);
       } else if (value.name === 'eur_usd_course') {
         courseEurUsd = Number(value.value)
+      } else if (value.name === 'usd_kzt_course') {
+        courseUsdKzt = Number(value.value)
+      } else if (value.name === 'rub_kzt_course') {
+        courseRubKzt = Number(value.value)
+      } else if (value.name === 'uah_kzt_course') {
+        courseUahKzt = Number(value.value)
       } else if (value.name === 'bitcoin_course') {
         data = JSON.parse(value.value);
         courseBtc = Number(data.usd);

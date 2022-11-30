@@ -1,8 +1,11 @@
 import {
   courseUsdRub,
+  courseUahRub,
   courseUsdUah,
   courseEurUsd,
-  courseUahRub,
+  courseUsdKzt,
+  courseRubKzt,
+  courseUahKzt,
   courseEthEur,
   courseBtcEur,
   courseBtc,
@@ -19,11 +22,16 @@ const usdId = [1, 2, 6, 7, 8, 12, 28, 29, 30, 42];
 const uahId = [3, 5, 26, 31, 35, 43, 44, 45];
 const rubId = [9, 11, 13, 14, 15, 16, 17, 18, 23, 24, 37, 40];
 const eurId = [32, 48];
+const kztId = [50, 51];
 
 let rub;
 let usd;
 let uah;
-let eur
+let eur;
+let kzt;
+
+
+//cripta
 const btc = 4;
 const dash = 20;
 const zec = 21;
@@ -33,51 +41,68 @@ const doge = 39;
 const tron = 46;
 const bnb = 49;
 
-
 export default function calculationsData(params, sing) {
-  
+
   let rowNode = params.api.getDisplayedRowAtIndex(`${params.node.rowIndex}`);
   let buyCurrency = Number(params.node.data.buyCurrency.id);
   let sellCurrency = Number(params.node.data.sellCurrency.id);
-  
+
   rubId.forEach(currency => {
     searchMatches(currency, 'rub')
-  })
-  
+  });
+
   usdId.forEach(currency => {
     searchMatches(currency, 'usd')
-  })
-  
+  });
+
   uahId.forEach(currency => {
     searchMatches(currency, 'uah')
-  })
-  
+  });
+
   eurId.forEach(currency => {
     searchMatches(currency, 'eur')
+  });
+
+  kztId.forEach(currency => {
+    searchMatches(currency, 'kzt')
   })
-  
-  
+
   if (rub === sellCurrency && usd === buyCurrency || usd === sellCurrency && rub === buyCurrency) {
     formulaDefault(courseUsdRub)
   }
-  
+
   if (uah === sellCurrency && usd === buyCurrency || usd === sellCurrency && uah === buyCurrency) {
     formulaDefault(courseUsdUah)
   }
-  
+
   if (uah === sellCurrency && rub === buyCurrency || rub === sellCurrency && uah === buyCurrency) {
     formulaDefault(courseUahRub)
   }
-  
+
   if (eur === sellCurrency && usd === buyCurrency || usd === sellCurrency && eur === buyCurrency) {
     console.log(courseEurUsd)
   }
-  
+
+
+//kzt
+  if (kzt === sellCurrency && usd === buyCurrency || usd === sellCurrency && kzt === buyCurrency) {
+    formulaDefault(courseUsdKzt)
+  }
+
+  if (kzt === sellCurrency && rub === buyCurrency || rub === sellCurrency && kzt === buyCurrency) {
+    formulaDefault(courseRubKzt)
+  }
+
+  if (kzt === sellCurrency && uah === buyCurrency || uah === sellCurrency && kzt === buyCurrency) {
+    formulaDefault(courseUahKzt)
+  }
+
+
   //Crypt - Usd
   if (btc === sellCurrency && usd === buyCurrency || usd === sellCurrency && btc === buyCurrency) {
     formulaDefault(courseBtc)
   }
-  
+
   if (dash === sellCurrency && usd === buyCurrency || usd === sellCurrency && dash === buyCurrency) {
     formulaDefault(courseDash)
   }
@@ -163,27 +188,59 @@ export default function calculationsData(params, sing) {
   if (eth === sellCurrency && uah === buyCurrency || uah === sellCurrency && eth === buyCurrency) {
     formulaDefault(courseEth, courseUsdUah, 'crypt');
   }
-  
+
   if (doge === sellCurrency && uah === buyCurrency || uah === sellCurrency && doge === buyCurrency) {
     formulaDefault(courseDoge, courseUsdUah, 'crypt');
   }
-  
+
   if (tron === sellCurrency && uah === buyCurrency || uah === sellCurrency && tron === buyCurrency) {
     formulaDefault(courseTron, courseUsdUah, 'crypt');
   }
-  
+
+  //Crypt - Kzt
+  if (btc === sellCurrency && kzt === buyCurrency || kzt === sellCurrency && btc === buyCurrency) {
+    formulaDefault(courseBtc, courseUsdKzt, 'crypt');
+  }
+
+  if (dash === sellCurrency && kzt === buyCurrency || kzt === sellCurrency && dash === buyCurrency) {
+    formulaDefault(courseDash, courseUsdKzt, 'crypt');
+  }
+
+  if (zec === sellCurrency && kzt === buyCurrency || kzt === sellCurrency && zec === buyCurrency) {
+    formulaDefault(courseZec, courseUsdKzt, 'crypt');
+  }
+
+  if (ltc === sellCurrency && kzt === buyCurrency || kzt === sellCurrency && ltc === buyCurrency) {
+    formulaDefault(courseLtc, courseUsdKzt, 'crypt');
+  }
+
+  if (bnb === sellCurrency && kzt === buyCurrency || kzt === sellCurrency && bnb === buyCurrency) {
+    formulaDefault(courseBnb, courseUsdKzt, 'crypt')
+  }
+
+  if (eth === sellCurrency && kzt === buyCurrency || kzt === sellCurrency && eth === buyCurrency) {
+    formulaDefault(courseEth, courseUsdKzt, 'crypt');
+  }
+
+  if (doge === sellCurrency && kzt === buyCurrency || uah === sellCurrency && doge === buyCurrency) {
+    formulaDefault(courseDoge, courseUsdKzt, 'crypt');
+  }
+
+  if (tron === sellCurrency && kzt === buyCurrency || kzt === sellCurrency && tron === buyCurrency) {
+    formulaDefault(courseTron, courseUsdKzt, 'crypt');
+  }
+
   //Crypt - Euro
   if (btc === sellCurrency && eur === buyCurrency || eur === sellCurrency && btc === buyCurrency) {
     formulaDefault(courseBtcEur);
   }
-  
+
   if (eth === sellCurrency && eur === buyCurrency || eur === sellCurrency && eth === buyCurrency) {
     formulaDefault(courseEthEur);
   }
   
   
   function searchMatches(currency, name) {
-    
     if (buyCurrency === currency || sellCurrency === currency) {
       if (name === "rub") {
         rub = currency;
@@ -193,6 +250,8 @@ export default function calculationsData(params, sing) {
         usd = currency;
       } else if (name === 'eur') {
         eur = currency;
+      } else if (name === 'kzt') {
+        kzt = currency;
       }
     }
   }
