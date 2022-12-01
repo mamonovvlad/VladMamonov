@@ -90,6 +90,7 @@ export default function calculationsData(params, sing) {
   }
 
   if (kzt === sellCurrency && rub === buyCurrency || rub === sellCurrency && kzt === buyCurrency) {
+    console.log(courseRubKzt)
     formulaDefault(courseRubKzt)
   }
 
@@ -222,7 +223,7 @@ export default function calculationsData(params, sing) {
     formulaDefault(courseEth, courseUsdKzt, 'crypt');
   }
 
-  if (doge === sellCurrency && kzt === buyCurrency || uah === sellCurrency && doge === buyCurrency) {
+  if (doge === sellCurrency && kzt === buyCurrency || kzt === sellCurrency && doge === buyCurrency) {
     formulaDefault(courseDoge, courseUsdKzt, 'crypt');
   }
 
