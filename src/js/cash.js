@@ -207,6 +207,9 @@ const gridOptions = {
   },
   onCellEditingStopped: function (params) {
     let rowNode = gridOptions.api.getDisplayedRowAtIndex(`${params.node.rowIndex}`);
+    gridOptions.api.flashCells({rowNodes: [rowNode], columns: [params.colDef.field]});
+    console.log(rowNode)
+    console.log(params.colDef.field)
     if (params.colDef.field !== undefined) {
       if (localStorage.getItem('merge-cash') === '1') {
         searchCurrencies(params);
@@ -217,9 +220,10 @@ const gridOptions = {
           value: params.value
         })
         changeCourseCity(data);
+        gridOptions.api.flashCells({rowNodes: [rowNode], columns: [params.colDef.field]});
+
       }
     }
-    gridOptions.api.flashCells({rowNodes: [rowNode], columns: [params.colDef.field]});
   },
 
   onRowDragMove: onRowDragMove,
