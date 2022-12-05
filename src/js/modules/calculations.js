@@ -80,11 +80,11 @@ export default function calculationsData(params, sing) {
   let currencies = [
     {
       name: 'rub',
-      value: rub
+      value: rub,
     },
     {
       name: 'usd',
-      value: usd
+      value: usd,
     },
     {
       name: 'uah',
@@ -144,6 +144,9 @@ export default function calculationsData(params, sing) {
           if (curr === usd && (item.name === 'doge' || item.name === 'tron')) {
             let res = (1 / item.course);
             formulaDefault(res)
+          } else if (val === 'curr') {
+            console.log(item.value)
+            console.log(curr)
           } else {
             formulaDefault(item.course, course, val);
           }
@@ -151,17 +154,17 @@ export default function calculationsData(params, sing) {
       }
     }
   }
-
+  //
   // //currency
+  // definitionCurrencies(currencies, rub, courseUahRub, 'curr');
   // definitionCurrencies(currencies, usd, courseUsdRub, 'curr');
   // definitionCurrencies(currencies, usd, courseUsdUah, 'curr');
-  // definitionCurrencies(currencies, rub, courseUahRub, 'curr');
   // definitionCurrencies(currencies, usd, courseEurUsd, 'curr');
   //
   // //kzt
-  // definitionCurrencies(currencies, rub, courseRubKzt, 'curr', 'kzt');
-  // definitionCurrencies(currencies, uah, courseUahKzt, 'curr', 'kzt');
-  // definitionCurrencies(currencies, usd, courseUsdKzt, 'curr', 'kzt');
+  // definitionCurrencies(currencies, rub, courseRubKzt, 'curr');
+  // definitionCurrencies(currencies, uah, courseUahKzt, 'curr');
+  // definitionCurrencies(currencies, usd, courseUsdKzt, 'curr');
   //crypto
   definitionCurrencies(crypt, eur);
   definitionCurrencies(crypt, usd);
