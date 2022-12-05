@@ -35,26 +35,47 @@ export default function calculationsData(params, sing) {
   let eur;
   let kzt;
 
-  rubId.forEach(currency => {
-    searchMatches(currency, 'rub')
-  });
+  function identificationIdentifier(id, name) {
+    id.forEach(currency => {
+      searchMatches(currency, name)
+    });
+  }
 
-  usdId.forEach(currency => {
-    searchMatches(currency, 'usd')
-  });
+  identificationIdentifier(rubId, 'rub')
+  identificationIdentifier(usdId, 'usd')
+  identificationIdentifier(uahId, 'uah')
+  identificationIdentifier(eurId, 'eur')
+  identificationIdentifier(kztId, 'kzt')
 
-  uahId.forEach(currency => {
-    searchMatches(currency, 'uah')
-  });
 
-  eurId.forEach(currency => {
-    searchMatches(currency, 'eur')
-  });
+//kzt
+  if (kzt === sellCurrency && usd === buyCurrency || usd === sellCurrency && kzt === buyCurrency) {
+    formulaDefault(courseUsdKzt)
+  }
 
-  kztId.forEach(currency => {
-    searchMatches(currency, 'kzt')
-  })
+  if (kzt === sellCurrency && rub === buyCurrency || rub === sellCurrency && kzt === buyCurrency) {
+    formulaDefault(courseRubKzt)
+  }
 
+  if (kzt === sellCurrency && uah === buyCurrency || uah === sellCurrency && kzt === buyCurrency) {
+    formulaDefault(courseUahKzt)
+  }
+
+  //rub
+  if (rub === sellCurrency && usd === buyCurrency || usd === sellCurrency && rub === buyCurrency) {
+    formulaDefault(courseUsdRub)
+  }
+  //uah
+  if (uah === sellCurrency && usd === buyCurrency || usd === sellCurrency && uah === buyCurrency) {
+    formulaDefault(courseUsdUah)
+  }
+  if (uah === sellCurrency && rub === buyCurrency || rub === sellCurrency && uah === buyCurrency) {
+    formulaDefault(courseUahRub)
+  }
+  //eur
+  if (eur === sellCurrency && usd === buyCurrency || usd === sellCurrency && eur === buyCurrency) {
+    formulaDefault(courseEurUsd)
+  }
 
   let currencies = [
     {
@@ -78,6 +99,7 @@ export default function calculationsData(params, sing) {
       value: kzt
     }
   ];
+
   let crypt = [
     {
       name: 'btc',
@@ -122,8 +144,6 @@ export default function calculationsData(params, sing) {
           if (curr === usd && (item.name === 'doge' || item.name === 'tron')) {
             let res = (1 / item.course);
             formulaDefault(res)
-          } else if (val === 'curr') {
-            formulaDefault(course)
           } else {
             formulaDefault(item.course, course, val);
           }
@@ -132,14 +152,16 @@ export default function calculationsData(params, sing) {
     }
   }
 
-  //currency
-  definitionCurrencies(currencies, usd, courseUsdRub, 'curr')
-  definitionCurrencies(currencies, usd, courseEurUsd, 'curr')
-  definitionCurrencies(currencies, usd, courseUsdUah, 'curr')
-  definitionCurrencies(currencies, usd, courseUsdKzt, 'curr')
-  definitionCurrencies(currencies, rub, courseUahRub, 'curr')
-  definitionCurrencies(currencies, rub, courseRubKzt, 'curr')
-  definitionCurrencies(currencies, uah, courseUahKzt, 'curr')
+  // //currency
+  // definitionCurrencies(currencies, usd, courseUsdRub, 'curr');
+  // definitionCurrencies(currencies, usd, courseUsdUah, 'curr');
+  // definitionCurrencies(currencies, rub, courseUahRub, 'curr');
+  // definitionCurrencies(currencies, usd, courseEurUsd, 'curr');
+  //
+  // //kzt
+  // definitionCurrencies(currencies, rub, courseRubKzt, 'curr', 'kzt');
+  // definitionCurrencies(currencies, uah, courseUahKzt, 'curr', 'kzt');
+  // definitionCurrencies(currencies, usd, courseUsdKzt, 'curr', 'kzt');
   //crypto
   definitionCurrencies(crypt, eur);
   definitionCurrencies(crypt, usd);

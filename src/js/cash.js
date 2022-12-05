@@ -26,7 +26,6 @@ let res = [],
 const gridOptions = {
   columnDefs: [
     {
-      sortIndex: 0,
       headerName: '№',
       field: 'buyCurrency.symbol',
       sort: 'asc',
@@ -37,7 +36,6 @@ const gridOptions = {
       }
     },
     {
-      sortIndex: 1,
       headerName: 'НАЗВАНИЕ',
       field: 'title',
       minWidth: 60,
@@ -47,13 +45,11 @@ const gridOptions = {
       }
     },
     {
-      sortIndex: 2,
       headerName: 'ГОРОД',
       field: 'city.name_ru',
       width: 100,
     },
     {
-      sortIndex: 3,
       headerName: 'АКТИВОСТЬ',
       field: "active",
       width: 100,
@@ -65,7 +61,6 @@ const gridOptions = {
       }
     },
     {
-      sortIndex: 4,
       headerName: 'КУРС',
       width: 120,
       field: 'rate',
@@ -77,25 +72,11 @@ const gridOptions = {
       },
     },
     {
-      sortIndex: 5,
       headerName: 'ТОП КУРС БЭСТА',
       width: 120,
       field: "course.market_course",
     },
     {
-      sortIndex: 6,
-      headerName: 'ПРОЦЕНТ',
-      width: 120,
-      field: "rate_diff_percent",
-      cellClass: params => {
-        return params.data.is_rate === 0 ? 'field-change' : 'text-center';
-      },
-      editable: params => {
-        return params.data.is_rate === 0 ? true : '';
-      },
-    },
-    {
-      sortIndex: 7,
       headerName: 'МИН',
       width: 70,
       suppressMovable: true,
@@ -109,7 +90,6 @@ const gridOptions = {
       }
     },
     {
-      sortIndex: 8,
       headerName: 'МАКС',
       field: "course.max_course",
       width: 70,
@@ -123,7 +103,17 @@ const gridOptions = {
       }
     },
     {
-      sortIndex: 9,
+      headerName: 'ПРОЦЕНТ',
+      width: 120,
+      field: "rate_diff_percent",
+      cellClass: params => {
+        return params.data.is_rate === 0 ? 'field-change' : 'text-center';
+      },
+      editable: params => {
+        return params.data.is_rate === 0 ? true : '';
+      },
+    },
+    {
       headerName: 'ПРОЦЕНТ БИРЖИ +-',
       width: 100,
       suppressMovable: true,
@@ -141,7 +131,6 @@ const gridOptions = {
       }
     },
     {
-      sortIndex: 10,
       headerName: 'ПРИВЯЗАТЬ К БИРЖЕ ?',
       width: 100,
       editable: false,
@@ -152,7 +141,6 @@ const gridOptions = {
       }
     },
     {
-      sortIndex: 11,
       headerName: 'ПАРСИТЬ ?',
       width: 100,
       editable: false,
@@ -163,7 +151,6 @@ const gridOptions = {
       }
     },
     {
-      sortIndex: 12,
       headerName: 'КУРС АКТИВЕН',
       width: 120,
       field: "is_rate",
@@ -172,7 +159,6 @@ const gridOptions = {
       }
     },
     {
-      sortIndex: 13,
       headerName: 'ПРОЦЕНТ АКТИВЕН',
       width: 120,
       field: "is_percent",
@@ -181,7 +167,6 @@ const gridOptions = {
       }
     },
     {
-      sortIndex: 14,
       headerName: 'ИНСТРУМЕНТЫ',
       width: 100,
       cellRenderer: params => {
@@ -207,9 +192,6 @@ const gridOptions = {
   },
   onCellEditingStopped: function (params) {
     let rowNode = gridOptions.api.getDisplayedRowAtIndex(`${params.node.rowIndex}`);
-    gridOptions.api.flashCells({rowNodes: [rowNode], columns: [params.colDef.field]});
-    console.log(rowNode)
-    console.log(params.colDef.field)
     if (params.colDef.field !== undefined) {
       if (localStorage.getItem('merge-cash') === '1') {
         searchCurrencies(params);
