@@ -61,16 +61,16 @@ export default function calculationsData(params, sing) {
     formulaDefault(courseUahKzt)
   }
 
-  //rub
-  if (rub === sellCurrency && usd === buyCurrency || usd === sellCurrency && rub === buyCurrency) {
-    formulaDefault(courseUsdRub)
-  }
   //uah
   if (uah === sellCurrency && usd === buyCurrency || usd === sellCurrency && uah === buyCurrency) {
     formulaDefault(courseUsdUah)
   }
   if (uah === sellCurrency && rub === buyCurrency || rub === sellCurrency && uah === buyCurrency) {
     formulaDefault(courseUahRub)
+  }
+  //rub
+  if (rub === sellCurrency && usd === buyCurrency || usd === sellCurrency && rub === buyCurrency) {
+    formulaDefault(courseUsdRub)
   }
   //eur
   if (eur === sellCurrency && usd === buyCurrency || usd === sellCurrency && eur === buyCurrency) {
@@ -144,9 +144,6 @@ export default function calculationsData(params, sing) {
           if (curr === usd && (item.name === 'doge' || item.name === 'tron')) {
             let res = (1 / item.course);
             formulaDefault(res)
-          } else if (val === 'curr') {
-            console.log(item.value)
-            console.log(curr)
           } else {
             formulaDefault(item.course, course, val);
           }
@@ -154,17 +151,7 @@ export default function calculationsData(params, sing) {
       }
     }
   }
-  //
-  // //currency
-  // definitionCurrencies(currencies, rub, courseUahRub, 'curr');
-  // definitionCurrencies(currencies, usd, courseUsdRub, 'curr');
-  // definitionCurrencies(currencies, usd, courseUsdUah, 'curr');
-  // definitionCurrencies(currencies, usd, courseEurUsd, 'curr');
-  //
-  // //kzt
-  // definitionCurrencies(currencies, rub, courseRubKzt, 'curr');
-  // definitionCurrencies(currencies, uah, courseUahKzt, 'curr');
-  // definitionCurrencies(currencies, usd, courseUsdKzt, 'curr');
+
   //crypto
   definitionCurrencies(crypt, eur);
   definitionCurrencies(crypt, usd);

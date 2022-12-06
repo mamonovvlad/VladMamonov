@@ -79,10 +79,9 @@ const gridOptions = {
     {
       headerName: 'МИН',
       width: 70,
-      suppressMovable: true,
       field: 'course.min_course',
-      editable: false,
-      cellClass: params => {
+      editable: true,
+      cellClass:() => {
         return 'field-change';
       },
       cellRenderer: function (params) {
@@ -93,9 +92,8 @@ const gridOptions = {
       headerName: 'МАКС',
       field: "course.max_course",
       width: 70,
-      suppressMovable: true,
-      editable: false,
-      cellClass: params => {
+      editable: true,
+      cellClass:() => {
         return 'field-change';
       },
       cellRenderer: function (params) {
@@ -120,6 +118,7 @@ const gridOptions = {
       editable: true,
       field: "course.min_max_percent",
       valueSetter: function (params) {
+        console.log(params)
         if (params.oldValue !== params.newValue) {
           params.newValue = params.newValue.replace(/,/, '.');
           params.data.course.min_max_percent = params.newValue;
@@ -127,7 +126,7 @@ const gridOptions = {
         }
       },
       cellRenderer: function (params) {
-        return buttonsRenderer(params, gridOptions, 1, calculationsData)
+        return buttonsRenderer(params, gridOptions, 1)
       }
     },
     {
