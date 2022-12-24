@@ -84,7 +84,7 @@ const openTab = (sellCurrency, buyCurrency, getCity, number) => {
     ACRUB: 'alfaclick',
     TBRUB: 'telebank',
     RUSSTRUB: 'russtandart',
-    CARDRUB: 'visa-mastercard-rur',
+    CARDRUB: 'visa-mastercard-rub',
     CARDUAH: 'visa-mastercard-uah',
     TRX: 'tron',
     CASHEUR: 'euro-cash',
