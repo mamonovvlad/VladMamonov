@@ -53,6 +53,7 @@ const openTab = (sellCurrency, buyCurrency, getCity, number) => {
     CANN: 'cann',
     MILAN: 'milan',
     ROME: 'rome',
+    PRAG: 'prag',
   }
   const namesMap = {
     BNBBEP20: 'binance-coin',
