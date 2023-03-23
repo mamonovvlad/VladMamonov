@@ -225,81 +225,6 @@ function receivingTable() {
     });
 }
 
-function checkbox(params, cls, col) {
-  let input = document.createElement('input');
-  let rowNode = gridOptions.api.getDisplayedRowAtIndex(`${params.node.rowIndex}`);
-  input.type = "checkbox";
-  input.setAttribute('data-idx', rowNode.rowIndex);
-  input.className = `default-checkbox ${cls}`
-  input.checked = params.value === 1;
-
-
-  input.addEventListener('change', function (event) {
-    let inpPercent = document.querySelectorAll('.inp__is_percent');
-    let inpRate = document.querySelectorAll('.inp__is_rate');
-
-    if (params.value === 0) {
-      params.value = 1;
-    } else {
-      params.value = 0;
-    }
-
-    let data = JSON.stringify({
-      id: params.data.id,
-      field: params.colDef.field,
-      value: params.value
-    })
-
-    if (this.classList.contains('inp__is_rate')) {
-      inpPercent.forEach(item => {
-        if (item.getAttribute('data-idx') === String(params.rowIndex)) {
-          if (this.checked === true) {
-            item.checked = false;
-            params.data.is_percent = 0;
-          } else {
-            item.checked = true;
-            params.data.is_percent = 1;
-          }
-        }
-      })
-      let data = JSON.stringify({
-        id: params.data.id,
-        field: 'is_percent',
-        value: params.data.is_percent
-      })
-      changeCourseCity(data)
-      setTimeout(() => {
-        rowNode.setDataValue(params.colDef.field, params.value)
-        gridOptions.api.redrawRows({rowNodes: [rowNode], columns: ['rate_diff_percent']})
-      }, 500)
-    }
-
-    if (this.classList.contains('inp__is_percent')) {
-      inpRate.forEach(item => {
-        if (item.getAttribute('data-idx') === String(params.rowIndex)) {
-          if (this.checked === true) {
-            item.checked = false;
-            params.data.is_rate = 0;
-          } else {
-            item.checked = true;
-            params.data.is_rate = 1;
-          }
-          let data = JSON.stringify({
-            id: params.data.id,
-            field: 'is_rate',
-            value: params.data.is_rate,
-          })
-          changeCourseCity(data)
-        }
-      })
-    }
-
-    changeCourseCity(data)
-  });
-  return input;
-}
-
-
 if (enableAll) {
   enableAll.addEventListener('click', () => {
     let data;
@@ -406,30 +331,34 @@ function searchCurrencies(par) {
   updateMergeCash(par.data.id, par.data.rate)
   // Save data table
   res.forEach(item => {
-    if (item.city.code === par.data.city.code) {
-      if (par.data.buyCurrency.code === "CASHUSD" && item.buyCurrency.code === "CASHUSD" || par.data.buyCurrency.code === "CASHEUR" && item.buyCurrency.code === "CASHEUR") {
-        if (par.data.sellCurrency.code === "USDTERC20" && item.sellCurrency.code === "USDTTRC20" || par.data.sellCurrency.code === "USDTTRC20" && item.sellCurrency.code === "USDTERC20") {
-          updateMergeCash(item.id, par.data.rate)
-        }
-      } else if (par.data.sellCurrency.code === "CASHUSD" && item.sellCurrency.code === "CASHUSD" || par.data.sellCurrency.code === "CASHEUR" && item.sellCurrency.code === "CASHEUR") {
-        if (par.data.buyCurrency.code === "USDTERC20" && item.buyCurrency.code === "USDTTRC20" || par.data.buyCurrency.code === "USDTTRC20" && item.buyCurrency.code === "USDTERC20") {
-          updateMergeCash(item.id, par.data.rate)
+    if (item.city && par.data.city) {
+      if (item.city.code === par.data.city.code) {
+        if (par.data.buyCurrency.code === "CASHUSD" && item.buyCurrency.code === "CASHUSD" || par.data.buyCurrency.code === "CASHEUR" && item.buyCurrency.code === "CASHEUR") {
+          if (par.data.sellCurrency.code === "USDTERC20" && item.sellCurrency.code === "USDTTRC20" || par.data.sellCurrency.code === "USDTTRC20" && item.sellCurrency.code === "USDTERC20") {
+            updateMergeCash(item.id, par.data.rate)
+          }
+        } else if (par.data.sellCurrency.code === "CASHUSD" && item.sellCurrency.code === "CASHUSD" || par.data.sellCurrency.code === "CASHEUR" && item.sellCurrency.code === "CASHEUR") {
+          if (par.data.buyCurrency.code === "USDTERC20" && item.buyCurrency.code === "USDTTRC20" || par.data.buyCurrency.code === "USDTTRC20" && item.buyCurrency.code === "USDTERC20") {
+            updateMergeCash(item.id, par.data.rate)
+          }
         }
       }
     }
   })
 // Update data table
   gridOptions.api.forEachNode((rowNode) => {
-    if (rowNode.data.city.code === par.data.city.code) {
-      if (par.data.buyCurrency.code === "CASHUSD" && rowNode.data.buyCurrency.code === "CASHUSD" || par.data.buyCurrency.code === "CASHEUR" && rowNode.data.buyCurrency.code === "CASHEUR") {
-        if (par.data.sellCurrency.code === "USDTERC20" && rowNode.data.sellCurrency.code === "USDTTRC20" || par.data.sellCurrency.code === "USDTTRC20" && rowNode.data.sellCurrency.code === "USDTERC20") {
-          rowNode.setDataValue([`rate`], par.data.rate)
-          gridOptions.api.flashCells({rowNodes: [rowNode], columns: ['rate']});
-        }
-      } else if (par.data.sellCurrency.code === "CASHUSD" && rowNode.data.sellCurrency.code === "CASHUSD" || par.data.sellCurrency.code === "CASHEUR" && rowNode.data.sellCurrency.code === "CASHEUR") {
-        if (par.data.buyCurrency.code === "USDTERC20" && rowNode.data.buyCurrency.code === "USDTTRC20" || par.data.buyCurrency.code === "USDTTRC20" && rowNode.data.buyCurrency.code === "USDTERC20") {
-          rowNode.setDataValue([`rate`], par.data.rate)
-          gridOptions.api.flashCells({rowNodes: [rowNode], columns: ['rate']});
+    if (rowNode.data.city && par.data.city) {
+      if (rowNode.data.city.code === par.data.city.code) {
+        if (par.data.buyCurrency.code === "CASHUSD" && rowNode.data.buyCurrency.code === "CASHUSD" || par.data.buyCurrency.code === "CASHEUR" && rowNode.data.buyCurrency.code === "CASHEUR") {
+          if (par.data.sellCurrency.code === "USDTERC20" && rowNode.data.sellCurrency.code === "USDTTRC20" || par.data.sellCurrency.code === "USDTTRC20" && rowNode.data.sellCurrency.code === "USDTERC20") {
+            rowNode.setDataValue([`rate`], par.data.rate)
+            gridOptions.api.flashCells({rowNodes: [rowNode], columns: ['rate']});
+          }
+        } else if (par.data.sellCurrency.code === "CASHUSD" && rowNode.data.sellCurrency.code === "CASHUSD" || par.data.sellCurrency.code === "CASHEUR" && rowNode.data.sellCurrency.code === "CASHEUR") {
+          if (par.data.buyCurrency.code === "USDTERC20" && rowNode.data.buyCurrency.code === "USDTTRC20" || par.data.buyCurrency.code === "USDTTRC20" && rowNode.data.buyCurrency.code === "USDTERC20") {
+            rowNode.setDataValue([`rate`], par.data.rate)
+            gridOptions.api.flashCells({rowNodes: [rowNode], columns: ['rate']});
+          }
         }
       }
     }
