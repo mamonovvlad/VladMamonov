@@ -50,14 +50,11 @@ const gridOptions = {
       width: 100,
     },
     {
-      headerName: 'АКТИВОСТЬ',
+      headerName: 'АКТИВНОСТЬ',
       field: "active",
       width: 100,
-      cellClass: params => {
-        return 'field-active';
-      },
       cellRenderer: function (params) {
-        return checkbox(params, 'inp__active', 'active')
+        return toggleCheckbox(params, 0)
       }
     },
     {
@@ -101,24 +98,12 @@ const gridOptions = {
       }
     },
     {
-      headerName: 'ПРОЦЕНТ',
-      width: 120,
-      field: "rate_diff_percent",
-      cellClass: params => {
-        return params.data.is_rate === 0 ? 'field-change' : 'text-center';
-      },
-      editable: params => {
-        return params.data.is_rate === 0 ? true : '';
-      },
-    },
-    {
       headerName: 'ПРОЦЕНТ БИРЖИ +-',
       width: 100,
       suppressMovable: true,
-      editable: true,
+      editable: false,
       field: "course.min_max_percent",
       valueSetter: function (params) {
-        console.log(params)
         if (params.oldValue !== params.newValue) {
           params.newValue = params.newValue.replace(/,/, '.');
           params.data.course.min_max_percent = params.newValue;
@@ -140,29 +125,23 @@ const gridOptions = {
       }
     },
     {
-      headerName: 'ПАРСИТЬ ?',
+      headerName: 'ПАРСИТЬ ВСЕ ?',
       width: 100,
       editable: false,
       suppressMovable: true,
       field: 'course.is_parse',
       cellRenderer: function (params) {
-        return toggleCheckbox(params, 0)
+        if (params.data.is_primary === 1 || params.data.is_primary === '1') {
+          return toggleCheckbox(params, 0)
+        }
       }
     },
     {
-      headerName: 'КУРС АКТИВЕН',
+      headerName: 'ПАРСИТЬ ГОРОД?',
       width: 120,
       field: "is_rate",
       cellRenderer: function (params) {
-        return checkbox(params, 'inp__is_rate', 'is_rate')
-      }
-    },
-    {
-      headerName: 'ПРОЦЕНТ АКТИВЕН',
-      width: 120,
-      field: "is_percent",
-      cellRenderer: function (params) {
-        return checkbox(params, 'inp__is_percent', 'is_percent')
+        return toggleCheckbox(params, 0)
       }
     },
     {
@@ -361,6 +340,7 @@ if (turnOff) {
     gridOptions.api.setRowData(newArr)
   })
 }
+
 
 nav(gridOptions);
 tableEnlargement();

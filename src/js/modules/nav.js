@@ -45,15 +45,17 @@ export function nav(gridOptions, template) {
 
 
   const determineSize = () => {
-    if (localStorage.getItem('size')) {
-      setTimeout(() => {
+    setTimeout(() => {
+      if (localStorage.getItem('size')) {
         if (localStorage.getItem('size') === '0') {
           autoSize(false);
         } else {
           maxSize()
         }
-      }, 1000)
-    }
+      } else {
+        autoSize(false);
+      }
+    }, 3000)
 
   }
 
@@ -65,6 +67,8 @@ export function nav(gridOptions, template) {
     gridOptions.columnApi.autoSizeColumns(allColumnIds, skipHeader);
     localStorage.setItem('size', '0')
   }
+
+
 
   const maxSize = () => {
     localStorage.setItem('size', '1')

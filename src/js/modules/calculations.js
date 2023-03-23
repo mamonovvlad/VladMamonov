@@ -74,6 +74,7 @@ export default function calculationsData(params, sing) {
   }
   //eur
   if (eur === sellCurrency && usd === buyCurrency || usd === sellCurrency && eur === buyCurrency) {
+    console.log(courseEurUsd)
     formulaDefault(courseEurUsd)
   }
 
