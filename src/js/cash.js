@@ -121,7 +121,13 @@ const gridOptions = {
       suppressMovable: true,
       field: "course.link_to_exchange",
       cellRenderer: function (params) {
-        return toggleCheckbox(params, 0)
+        if (params.data.is_primary === 1 || params.data.is_primary === '1') {
+          return toggleCheckbox(params, 1)
+        } else if (params.data.is_primary === 0 || params.data.is_primary === '0') {
+          return toggleCheckbox(params, 0)
+        } else {
+          return false
+        }
       }
     },
     {

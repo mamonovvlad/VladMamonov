@@ -1,4 +1,4 @@
-import {changeCourseCity} from "./sending-data.js";
+import {changeCourseCity, updateTable} from "./sending-data.js";
 
 
 export default function toggleCheckbox(params, send) {
@@ -23,14 +23,15 @@ export default function toggleCheckbox(params, send) {
         field: params.column.colId,
         value: params.value
       })
-      
-      
-      if (send === 0) {
-        console.log(data)
-        changeCourseCity(data)
-      } else {
-        return false
-      }
+
+
+    if (send === 0) {
+      changeCourseCity(data)
+    } else if (send === 1) {
+      updateTable(data)
+    } else {
+      return false
+    }
     }
   );
   return input;
