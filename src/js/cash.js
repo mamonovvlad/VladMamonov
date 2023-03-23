@@ -138,7 +138,7 @@ const gridOptions = {
       field: 'course.is_parse',
       cellRenderer: function (params) {
         if (params.data.is_primary === 1 || params.data.is_primary === '1') {
-          return toggleCheckbox(params, 0)
+          return toggleCheckbox(params, 1)
         }
       }
     },
