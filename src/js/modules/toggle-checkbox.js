@@ -19,12 +19,12 @@ export default function toggleCheckbox(params, send) {
       rowNode.setDataValue(params.column.colId, params.value)
       
       let data = JSON.stringify({
-        id: params.node.data.course.id,
+        id: params.data.id,
         field: params.column.colId,
         value: params.value
       })
 
-
+    console.log(data)
     if (send === 0) {
       changeCourseCity(data)
     } else if (send === 1) {

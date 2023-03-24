@@ -99,7 +99,7 @@ export default function buttonsRenderer(params, gridOptions, send) {
       startTimeout();
       updateTable(data);
     } else if (send === 1) {
-      changeCourseCity(data);
+      updateTable(data);
     } else {
       return false
     }
