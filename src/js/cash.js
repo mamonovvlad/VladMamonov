@@ -137,7 +137,6 @@ const gridOptions = {
       suppressMovable: true,
       field: 'course.is_parse',
       cellRenderer: function (params) {
-        console.log(params)
         if (params.data.is_primary === 1 || params.data.is_primary === '1') {
           return toggleCheckbox(params, 1)
         }
