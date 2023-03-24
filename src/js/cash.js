@@ -62,11 +62,9 @@ const gridOptions = {
       width: 120,
       field: 'rate',
       cellClass: params => {
-        return params.data.is_rate === 1 ? 'field-change' : 'text-center';
+        return 'field-change';
       },
-      editable: params => {
-        return params.data.is_rate === 1 ? true : '';
-      },
+      editable: true,
     },
     {
       headerName: 'ТОП КУРС БЭСТА',
@@ -119,15 +117,10 @@ const gridOptions = {
       width: 100,
       editable: false,
       suppressMovable: true,
-      field: "course.link_to_exchange",
+      field: "link_to_exchange",
       cellRenderer: function (params) {
-        if (params.data.is_primary === 1 || params.data.is_primary === '1') {
-          return toggleCheckbox(params, 1)
-        } else if (params.data.is_primary === 0 || params.data.is_primary === '0') {
           return toggleCheckbox(params, 0)
-        } else {
-          return false
-        }
+
       }
     },
     {
