@@ -25,7 +25,7 @@ const eurId = [32, 48];
 const kztId = [50, 51];
 
 
-export default function calculationsData(params, sing) {
+export default function calculationsData(params,send, sing) {
   let rowNode = params.api.getDisplayedRowAtIndex(`${params.node.rowIndex}`);
   let buyCurrency = Number(params.node.data.buyCurrency.id);
   let sellCurrency = Number(params.node.data.sellCurrency.id);
@@ -175,10 +175,15 @@ export default function calculationsData(params, sing) {
       }
     }
   }
-  
-  
-  function formulaDefault(mainCourse, course, value) {
-    params.value = params.data.course.min_max_percent;
+
+
+  function formulaDefault(mainCourse, course, value, send) {
+
+    if (send === 0) {
+      params.value = params.data.course.min_max_percent;
+    } else if (send === 1) {
+      params.value = params.data.min_max_percent;
+    }
     let res
     if (sing === '+') {
       res = (mainCourse + (0.01 * mainCourse * (Number(params.value) - 0.1)) + (mainCourse * 0.001)).toFixed(4);
@@ -199,11 +204,20 @@ export default function calculationsData(params, sing) {
         res = (res * course).toFixed(4);
       }
     }
-    
-    if (params.data.course.min_course !== "1" && params.data.course.min_course !== 1) {
-      rowNode.setDataValue([`course.min_course`], +res);
-    } else {
-      rowNode.setDataValue([`course.max_course`], +res)
+
+    if (send === 0) {
+      if (params.data.course.min_course !== "1" && params.data.course.min_course !== 1) {
+        rowNode.setDataValue([`course.min_course`], +res);
+      } else {
+        rowNode.setDataValue([`course.max_course`], +res)
+      }
+    } else if (send === 1) {
+      if (params.data.min_course !== "1" && params.data.min_course !== 1) {
+        rowNode.setDataValue([`min_course`], +res);
+      } else {
+        rowNode.setDataValue([`max_course`], +res)
+      }
     }
+
   }
 }

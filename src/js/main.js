@@ -192,7 +192,7 @@ const gridOptions = {
           clearInterval(timeout);
           params.newValue = params.newValue.replace(/,/, '.');
           params.data.course.min_max_percent = params.newValue;
-          calculationsData(params)
+          calculationsData(params,0)
         }
       },
       cellRenderer: function (params) {

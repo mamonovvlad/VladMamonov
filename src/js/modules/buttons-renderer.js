@@ -27,21 +27,24 @@ export default function buttonsRenderer(params, gridOptions, send) {
       buyCurrency.placeholder = `Валюта не назначена`
     }
   }
-  
+
   buttons.className = 'min_max_percent'
   buttons.innerHTML = `
     <button class="button-percent" data-sign="-">-</button>
         <span class="my-value"></span>
     <button class="button-percent" data-sign="+">+</button>`;
-  
+
   let eValue = buttons.querySelector('.my-value'),
     buttonPercent = buttons.querySelectorAll('.button-percent');
-  
-  eValue.innerHTML = params.data.course.min_max_percent === '' ? '0' : +params.data.course.min_max_percent;
+  if (send === 0) {
+    eValue.innerHTML = params.data.course.min_max_percent === '' ? '0' : +params.data.course.min_max_percent;
+  } else if (send === 1) {
+    eValue.innerHTML = params.data.min_max_percent === '' ? '0' : +params.data.min_max_percent;
+  }
   eValue.setAttribute('data-index', `${rowNode.rowIndex}`)
   eValue.setAttribute('data-sell-currency', `${rowNode.data.sellCurrency.id}`)
   eValue.setAttribute('data-buy-currency', `${rowNode.data.buyCurrency.id}`)
-  
+
   eValue.addEventListener("click", () => {
     params.colDef.editable = true;
   });
@@ -60,7 +63,7 @@ export default function buttonsRenderer(params, gridOptions, send) {
       if (send === 0) {
         clearInterval(timeout);
       }
-      calculationsData(params, e.target.dataset.sign)
+      calculationsData(params,send ,e.target.dataset.sign)
       sendData();
     }, 500));
     
@@ -82,28 +85,32 @@ export default function buttonsRenderer(params, gridOptions, send) {
     ${sing}
     0.1`).toFixed(2);
     params.value = +number;
-    params.data.course.min_max_percent = +number;
+    if (send === 0) {
+      params.data.course.min_max_percent = +number;
+    } else if (send === 1) {
+      params.data.min_max_percent = +number;
+    }
     params.eParentOfValue.querySelector('.my-value').innerHTML = +number;
   }
   
   function sendData() {
     let number = params.value;
     let data = JSON.stringify({
-      id: params.node.data.course.id,
+      id: send === 0 ? params.node.data.course.id : params.node.data.id,
       field: params.column.colId,
       value: String(number)
     })
-    
-    
+
+    console.log(data)
     if (send === 0) {
       startTimeout();
       updateTable(data);
     } else if (send === 1) {
-      updateTable(data);
+      changeCourseCity(data);
     } else {
       return false
     }
-    
+
   }
   
   return buttons;

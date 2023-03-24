@@ -76,25 +76,25 @@ const gridOptions = {
     {
       headerName: 'МИН',
       width: 70,
-      field: 'course.min_course',
+      field: 'min_course',
       editable: true,
       cellClass:() => {
         return 'field-change';
       },
       cellRenderer: function (params) {
-        return `${params.data.course.min_course}`
+        return `${params.data.min_course}`
       }
     },
     {
       headerName: 'МАКС',
-      field: "course.max_course",
+      field: "max_course",
       width: 70,
       editable: true,
       cellClass:() => {
         return 'field-change';
       },
       cellRenderer: function (params) {
-        return `${params.data.course.max_course}`
+        return `${params.data.max_course}`
       }
     },
     {
@@ -102,12 +102,12 @@ const gridOptions = {
       width: 100,
       suppressMovable: true,
       editable: false,
-      field: "course.min_max_percent",
+      field: "min_max_percent",
       valueSetter: function (params) {
         if (params.oldValue !== params.newValue) {
           params.newValue = params.newValue.replace(/,/, '.');
-          params.data.course.min_max_percent = params.newValue;
-          calculationsData(params)
+          params.data.min_max_percent = params.newValue;
+          calculationsData(params,1)
         }
       },
       cellRenderer: function (params) {
@@ -137,6 +137,7 @@ const gridOptions = {
       suppressMovable: true,
       field: 'course.is_parse',
       cellRenderer: function (params) {
+        console.log(params)
         if (params.data.is_primary === 1 || params.data.is_primary === '1') {
           return toggleCheckbox(params, 1)
         }
