@@ -7,7 +7,6 @@ import buttonsRenderer from './modules/buttons-renderer.js'
 import openWindow from "./modules/open-window.js";
 import toggleCheckbox from "./modules/toggle-checkbox.js";
 import {gettingCourses} from './modules/getting-courses.js'
-import calculationsData from './modules/calculations.js'
 import mergeCash from "./modules/merge-cash.js";
 
 
@@ -105,7 +104,6 @@ const gridOptions = {
         if (params.oldValue !== params.newValue) {
           params.newValue = params.newValue.replace(/,/, '.');
           params.data.min_max_percent = params.newValue;
-          calculationsData(params,1)
         }
       },
       cellRenderer: function (params) {

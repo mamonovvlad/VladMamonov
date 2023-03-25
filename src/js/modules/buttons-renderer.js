@@ -62,8 +62,9 @@ export default function buttonsRenderer(params, gridOptions, send) {
     item.addEventListener('click', debounce((e) => {
       if (send === 0) {
         clearInterval(timeout);
+        calculationsData(params, e.target.dataset.sign)
       }
-      calculationsData(params,send ,e.target.dataset.sign)
+
       sendData();
     }, 500));
     
