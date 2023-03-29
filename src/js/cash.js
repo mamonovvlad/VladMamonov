@@ -122,21 +122,17 @@ const gridOptions = {
       }
     },
     {
-      headerName: 'ПАРСИТЬ ВСЕ ?',
-      width: 100,
-      editable: false,
-      suppressMovable: true,
-      field: 'course.is_parse',
+      headerName: 'РУЧНОЙ КУРС',
+      width: 120,
+      field: "is_rate",
       cellRenderer: function (params) {
-        if (params.data.is_primary === 1 || params.data.is_primary === '1') {
-          return toggleCheckbox(params, 1)
-        }
+        return toggleCheckbox(params, 0)
       }
     },
     {
-      headerName: 'ПАРСИТЬ ГОРОД?',
+      headerName: 'ПАРСИТЬ ГОРОД ?',
       width: 120,
-      field: "is_rate",
+      field: "is_rate_update",
       cellRenderer: function (params) {
         return toggleCheckbox(params, 0)
       }
