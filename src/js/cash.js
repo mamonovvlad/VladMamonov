@@ -2,7 +2,7 @@ import onRowDragEnd from './modules/row-drag.js'
 import {instruments} from "./modules/instruments.js";
 import tableEnlargement from './modules/table-enlargement.js'
 import {nav} from "./modules/nav.js";
-import {changeCourseCity} from "./modules/sending-data.js";
+import {changeCourseCity, updateTable} from "./modules/sending-data.js";
 import buttonsRenderer from './modules/buttons-renderer.js'
 import openWindow from "./modules/open-window.js";
 import toggleCheckbox from "./modules/toggle-checkbox.js";
@@ -64,6 +64,43 @@ const gridOptions = {
         return 'field-change';
       },
       editable: true,
+    },
+    {
+      headerName: 'ТАРИФЫ',
+      width: 120,
+      field: 'course.rate_field',
+      cellRenderer: (params) => {
+        if (params.data.is_primary === 1) {
+          let select = document.createElement('select');
+          if (params.data.course.rate_field === null || params.data.course.rate_field === 'null' || params.data.course.rate_field === 'sell' || params.data.course.rate_field === 'buy') {
+            select.className = 'rate-field';
+            select.selected = params.data.course.rate_field;
+            select.innerHTML = `
+            <option value="null">Дефолт</option>
+            <option value="sell">Отдаю</option>
+            <option value="buy">Получаю</option>
+            `
+            for (let i = 0; i < select.length; i++) {
+              if (select[i].value === `${params.data.course.rate_field}`) select[i].selected = true;
+            }
+
+            select.addEventListener('change', (e) => {
+              let data = JSON.stringify({
+                id: params.node.data.course.id,
+                field: params.column.colId,
+                value: e.target.value
+              })
+              updateTable(data)
+            })
+          } else {
+            select.innerHTML = `
+              <option>Поле не найдено</option>
+            `
+          }
+
+          return select
+        }
+      }
     },
     {
       headerName: 'ТОП КУРС БЭСТА',
@@ -135,6 +172,17 @@ const gridOptions = {
       field: "is_rate_update",
       cellRenderer: function (params) {
         return toggleCheckbox(params, 0)
+      }
+    },
+    {
+      headerName: 'ЭКСПОРТ МИН В КУРС',
+      width: 120,
+      cellRenderer: function (params) {
+        let input = document.createElement('input');
+        input.type = "checkbox";
+        input.className = 'default-checkbox '
+        input.checked = params.value === 1 || params.value === '1';
+        return input
       }
     },
     {
