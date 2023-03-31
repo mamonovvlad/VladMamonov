@@ -177,12 +177,9 @@ const gridOptions = {
     {
       headerName: 'ЭКСПОРТ МИН В КУРС',
       width: 120,
+      field: 'is_set_exchange',
       cellRenderer: function (params) {
-        let input = document.createElement('input');
-        input.type = "checkbox";
-        input.className = 'default-checkbox '
-        input.checked = params.value === 1 || params.value === '1';
-        return input
+        return toggleCheckbox(params, 0)
       }
     },
     {
