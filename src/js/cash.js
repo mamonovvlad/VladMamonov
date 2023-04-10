@@ -64,6 +64,19 @@ const gridOptions = {
         return 'field-change';
       },
       editable: true,
+      cellRenderer: (params) => {
+        if (params.data.is_set_exchange === '1' || params.data.is_set_exchange === 1) {
+          let sell = parseFloat(params.node.data.course.sell);
+          let buy = parseFloat(params.node.data.course.buy);
+          if (sell >= 1 && sell <= 1) {
+            return buy.toFixed(5);
+          } else if (buy >= 1 && buy <= 1) {
+            return sell.toFixed(5);
+          }
+        } else {
+          return params.data.rate
+        }
+      }
     },
     {
       headerName: 'ТАРИФЫ',

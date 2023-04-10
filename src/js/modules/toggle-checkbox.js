@@ -24,13 +24,13 @@ export default function toggleCheckbox(params, send) {
         value: params.value
       })
 
-    if (send === 0) {
-      changeCourseCity(data)
-    } else if (send === 1) {
-      updateTable(data)
-    } else {
-      return false
-    }
+      if (send === 0) {
+        changeCourseCity(data)
+      } else if (send === 1) {
+        updateTable(data)
+      } else {
+        return false
+      }
     }
   );
   return input;
