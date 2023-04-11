@@ -99,12 +99,13 @@ button i {
 }
 
 
-.merge-cash {
+.label-wrapper {
     display: flex;
     align-items: center;
     cursor: pointer;
 }
-.merge-cash input{
+
+.label-wrapper input {
     margin-right: 4px;
 }
 
