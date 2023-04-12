@@ -2,14 +2,15 @@ import {pauseTimeout, startTimeout, timeout} from "./timeout.js";
 import {updateTable,changeCourseCity} from "./sending-data.js";
 import debounce from "./debounce.js";
 import calculationsData from './calculations.js'
+import {searchCurrencies} from "./search-currencies.js";
 
-export default function buttonsRenderer(params, gridOptions, send) {
-  
+export default function buttonsRenderer(params, gridOptions, send, res = null) {
+
   const sellCurrency = document.querySelector('.sell-currency'),
     buyCurrency = document.querySelector('.buy-currency'),
     buttons = document.createElement("div");
   let rowNode = gridOptions.api.getDisplayedRowAtIndex(`${params.node.rowIndex}`);
-  
+
   if (rowNode.data.template !== undefined) {
     let originalIds = rowNode.data.template.primary_currency_ids;
     if (originalIds !== null && originalIds !== "" && typeof originalIds === 'string') {
@@ -60,12 +61,15 @@ export default function buttonsRenderer(params, gridOptions, send) {
     
     //При клике (Отправка)
     item.addEventListener('click', debounce((e) => {
-      if (send === 0) {
-        clearInterval(timeout);
-        calculationsData(params, e.target.dataset.sign)
+      if (localStorage.getItem('merge-percentage-exchange') === '1') {
+        searchCurrencies(res, params)
+      } else {
+        if (send === 0) {
+          clearInterval(timeout);
+          calculationsData(params, e.target.dataset.sign)
+        }
+        sendData();
       }
-
-      sendData();
     }, 500));
     
   })
@@ -102,7 +106,6 @@ export default function buttonsRenderer(params, gridOptions, send) {
       value: String(number)
     })
 
-    console.log(data)
     if (send === 0) {
       startTimeout();
       updateTable(data);

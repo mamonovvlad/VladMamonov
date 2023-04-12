@@ -8,7 +8,7 @@ import openWindow from "./modules/open-window.js";
 import toggleCheckbox from "./modules/toggle-checkbox.js";
 import {gettingCourses} from './modules/getting-courses.js'
 import {mergeCash, mergePercentageExchange} from "./modules/merge-cash.js";
-
+import {searchCurrencies} from "./modules/search-currencies.js";
 
 const proxy = "/proxy.php?url=",
   host = "http://local.obmen.log",
@@ -145,13 +145,15 @@ const gridOptions = {
       editable: false,
       field: "min_max_percent",
       valueSetter: function (params) {
-        if (params.oldValue !== params.newValue) {
-          params.newValue = params.newValue.replace(/,/, '.');
-          params.data.min_max_percent = params.newValue;
+        if (params.oldValue && params.newValue) {
+          if (params.oldValue !== String(params.newValue)) {
+            params.newValue = String(params.newValue).replace(/,/, '.');
+            params.data.min_max_percent = +params.newValue;
+          }
         }
       },
       cellRenderer: function (params) {
-        return buttonsRenderer(params, gridOptions, 1)
+        return buttonsRenderer(params, gridOptions, 1, res)
       }
     },
     {
@@ -217,7 +219,7 @@ const gridOptions = {
     let rowNode = gridOptions.api.getDisplayedRowAtIndex(`${params.node.rowIndex}`);
     if (params.colDef.field !== undefined) {
       if (localStorage.getItem('merge-cash') === '1' || localStorage.getItem('merge-percentage-exchange') === '1') {
-        searchCurrencies(params);
+        searchCurrencies(res, params);
       } else {
         let data = JSON.stringify({
           id: params.data.id,
@@ -373,75 +375,7 @@ function openList(btn, res, params, gridOptions) {
   gridOptions.api.setRowData(newStore);
 }
 
-function searchCurrencies(par) {
-  updateMerge(par.data.id, par)
-  // Save data table
-  res.forEach(item => {
-    if (item.city && par.data.city) {
-      if (item.city.code === par.data.city.code) {
-        if (par.data.buyCurrency.code === "CASHUSD" && item.buyCurrency.code === "CASHUSD" || par.data.buyCurrency.code === "CASHEUR" && item.buyCurrency.code === "CASHEUR") {
-          if (par.data.sellCurrency.code === "USDTERC20" && item.sellCurrency.code === "USDTTRC20" || par.data.sellCurrency.code === "USDTTRC20" && item.sellCurrency.code === "USDTERC20") {
-            updateMerge(item.id, par)
-          }
-        } else if (par.data.sellCurrency.code === "CASHUSD" && item.sellCurrency.code === "CASHUSD" || par.data.sellCurrency.code === "CASHEUR" && item.sellCurrency.code === "CASHEUR") {
-          if (par.data.buyCurrency.code === "USDTERC20" && item.buyCurrency.code === "USDTTRC20" || par.data.buyCurrency.code === "USDTTRC20" && item.buyCurrency.code === "USDTERC20") {
-            updateMerge(item.id, par)
-          }
-        }
-      }
-    }
-  })
-// Update data table
-  gridOptions.api.forEachNode((rowNode) => {
-    if (rowNode.data.city && par.data.city) {
-      if (rowNode.data.city.code === par.data.city.code) {
-        if (par.data.buyCurrency.code === "CASHUSD" && rowNode.data.buyCurrency.code === "CASHUSD" || par.data.buyCurrency.code === "CASHEUR" && rowNode.data.buyCurrency.code === "CASHEUR") {
-          if (par.data.sellCurrency.code === "USDTERC20" && rowNode.data.sellCurrency.code === "USDTTRC20" || par.data.sellCurrency.code === "USDTTRC20" && rowNode.data.sellCurrency.code === "USDTERC20") {
-            if (localStorage.getItem('merge-cash') === '1' && par.colDef.field === 'rate') {
-              rowNode.setDataValue([`rate`], par.data.rate)
-              gridOptions.api.flashCells({rowNodes: [rowNode], columns: ['rate']});
-            } else if (localStorage.getItem('merge-percentage-exchange') === '1' && par.colDef.field === 'min_max_percent') {
-              rowNode.setDataValue([`min_max_percent`], par.data.min_max_percent)
-              gridOptions.api.flashCells({rowNodes: [rowNode], columns: ['min_max_percent']});
-            }
-          }
-        } else if (par.data.sellCurrency.code === "CASHUSD" && rowNode.data.sellCurrency.code === "CASHUSD" || par.data.sellCurrency.code === "CASHEUR" && rowNode.data.sellCurrency.code === "CASHEUR") {
-          if (par.data.buyCurrency.code === "USDTERC20" && rowNode.data.buyCurrency.code === "USDTTRC20" || par.data.buyCurrency.code === "USDTTRC20" && rowNode.data.buyCurrency.code === "USDTERC20") {
-            if (localStorage.getItem('merge-cash') === '1' && par.colDef.field === 'rate') {
-              rowNode.setDataValue([`rate`], par.data.rate)
-              gridOptions.api.flashCells({rowNodes: [rowNode], columns: ['rate']});
-            } else if (localStorage.getItem('merge-percentage-exchange') === '1' && par.colDef.field === 'min_max_percent') {
-              rowNode.setDataValue([`min_max_percent`], par.data.min_max_percent)
-              gridOptions.api.flashCells({rowNodes: [rowNode], columns: ['min_max_percent']});
-            }
-          }
-        }
-      }
-    }
-  });
-}
 
-function updateMerge(id, value) {
-  console.log(value.colDef.field)
-  if (localStorage.getItem('merge-cash') === '1' && value.colDef.field === 'rate') {
-    let data = JSON.stringify({
-      id: id,
-      field: 'rate',
-      value: value.data.rate
-    })
-    changeCourseCity(data)
-  } else if (localStorage.getItem('merge-percentage-exchange') === '1' && value.colDef.field === 'min_max_percent') {
-    let data = JSON.stringify({
-      id: id,
-      field: 'min_max_percent',
-      value: value.data.min_max_percent
-    })
-    changeCourseCity(data)
-  } else {
-    return false;
-  }
-
-}
 
 
 function getRowId(params) {
