@@ -59,14 +59,17 @@ const gridOptions = {
     {
       headerName: 'КУРС',
       width: 120,
-      field: 'rate',
+      field: 'course',
+      editable: true,
       cellClass: params => {
         return 'field-change';
       },
-      editable: true,
       cellRenderer: (params) => {
+        console.log(params)
         if (params.data.is_set_exchange === '1' || params.data.is_set_exchange === 1) {
           return params.data.min_course
+        } else if (params.data.is_set_max_exchange === '1' || params.data.is_set_max_exchange === 1) {
+          return params.data.max_course
         } else {
           return params.data.rate
         }
@@ -255,7 +258,6 @@ document.addEventListener('DOMContentLoaded', function () {
   receivingTable();
 });
 
-
 function receivingTable() {
   let urlTable = proxy +
     encodeURIComponent(
@@ -321,7 +323,6 @@ if (turnOff) {
   })
 }
 
-
 nav(gridOptions);
 tableEnlargement();
 mergeCash();
@@ -382,8 +383,6 @@ function openList(btn, res, params, gridOptions) {
 
   gridOptions.api.setRowData(newStore);
 }
-
-
 
 
 function getRowId(params) {
