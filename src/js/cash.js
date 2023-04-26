@@ -192,6 +192,14 @@ const gridOptions = {
       }
     },
     {
+      headerName: 'ЭКСПОРТ МАКС В КУРС',
+      width: 120,
+      field: 'is_set_max_exchange',
+      cellRenderer: function (params) {
+        return toggleCheckbox(params, 0)
+      }
+    },
+    {
       headerName: 'ИНСТРУМЕНТЫ',
       width: 100,
       cellRenderer: params => {
