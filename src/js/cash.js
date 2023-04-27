@@ -9,6 +9,7 @@ import toggleCheckbox from "./modules/toggle-checkbox.js";
 import {gettingCourses} from './modules/getting-courses.js'
 import {mergeCash, mergePercentageExchange} from "./modules/merge-cash.js";
 import {searchCurrencies} from "./modules/search-currencies.js";
+import calculationsData from "./modules/calculations.js";
 
 const proxy = "/proxy.php?url=",
   host = "http://local.obmen.log",
@@ -151,6 +152,7 @@ const gridOptions = {
           if (params.oldValue !== String(params.newValue)) {
             params.newValue = String(params.newValue).replace(/,/, '.');
             params.data.min_max_percent = +params.newValue;
+            calculationsData(params,true)
           }
         }
       },

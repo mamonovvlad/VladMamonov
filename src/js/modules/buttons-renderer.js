@@ -52,7 +52,7 @@ export default function buttonsRenderer(params, gridOptions, send, res = null) {
   
   
   buttonPercent.forEach(item => {
-    item.addEventListener('mousedown', (e,) => {
+    item.addEventListener('click', (e,) => {
       params.colDef.editable = false;
       editData(e.target.dataset.sign);
     })
@@ -64,7 +64,9 @@ export default function buttonsRenderer(params, gridOptions, send, res = null) {
       } else {
         if (send === 0) {
           clearInterval(timeout);
-          calculationsData(params, e.target.dataset.sign)
+          calculationsData(params, false, e.target.dataset.sign)
+        } else {
+          calculationsData(params, true, e.target.dataset.sign)
         }
         sendData();
       }

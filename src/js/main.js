@@ -192,7 +192,7 @@ const gridOptions = {
           clearInterval(timeout);
           params.newValue = params.newValue.replace(/,/, '.');
           params.data.course.min_max_percent = params.newValue;
-          calculationsData(params)
+          calculationsData(params, false)
         }
       },
       cellRenderer: function (params) {
@@ -460,8 +460,6 @@ function checkbox(params, col) {
       if (params.data.course.is_active_limiter) {
         gridOptions.api.redrawRows({rowNodes: [rowNode], columns: ['course.limiter']});
       }
-      
-      
       updateTable(data)
       gridOptions.api.flashCells({rowNodes: [rowNode], columns: [params.colDef.field]});
     }

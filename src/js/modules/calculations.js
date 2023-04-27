@@ -25,7 +25,7 @@ const eurId = [32, 48];
 const kztId = [50, 51];
 
 
-export default function calculationsData(params, sing) {
+export default function calculationsData(params, city = false, sing) {
   let rowNode = params.api.getDisplayedRowAtIndex(`${params.node.rowIndex}`);
   let buyCurrency = Number(params.node.data.buyCurrency.id);
   let sellCurrency = Number(params.node.data.sellCurrency.id);
@@ -199,12 +199,20 @@ export default function calculationsData(params, sing) {
         res = (res * course).toFixed(4);
       }
     }
-
-    if (params.data.course.min_course !== "1" && params.data.course.min_course !== 1) {
+    if (city === true) {
+      if (params.data.course.min_course !== "1" && params.data.course.min_course !== 1) {
+        rowNode.setDataValue([`min_course`], +res);
+      } else if (params.data.course.max_course !== "1" && params.data.course.max_course !== 1) {
+        rowNode.setDataValue([`max_course`], +res)
+      }
+    } else {
+      if (params.data.course.min_course !== "1" && params.data.course.min_course !== 1) {
         rowNode.setDataValue([`course.min_course`], +res);
-      } else {
+      } else if (params.data.course.max_course !== "1" && params.data.course.max_course !== 1) {
         rowNode.setDataValue([`course.max_course`], +res)
       }
+    }
+
 
   }
 }
