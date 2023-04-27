@@ -52,14 +52,12 @@ export default function buttonsRenderer(params, gridOptions, send, res = null) {
   
   
   buttonPercent.forEach(item => {
-    // При нажатии (Таймер Начинается)
     item.addEventListener('mousedown', (e,) => {
       params.colDef.editable = false;
       editData(e.target.dataset.sign);
     })
     
-    
-    //При клике (Отправка)
+
     item.addEventListener('click', debounce((e) => {
       if (localStorage.getItem('merge-percentage-exchange') === '1') {
         searchCurrencies(res, params)
@@ -71,7 +69,6 @@ export default function buttonsRenderer(params, gridOptions, send, res = null) {
         sendData();
       }
     }, 500));
-    
   })
   
   

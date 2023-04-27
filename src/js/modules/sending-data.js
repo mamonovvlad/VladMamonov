@@ -17,8 +17,9 @@ const updateTable = (data) => {
     }
   ).then(function (res) {
   })
-  
 }
+
+
 
 const changeMultiple = (data) => {
   let courses = {};
