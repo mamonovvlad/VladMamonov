@@ -145,6 +145,9 @@ export default function calculationsData(params, city = false, sing) {
           if (curr === usd && (item.name === 'doge' || item.name === 'tron')) {
             let res = (1 / item.course);
             formulaDefault(res)
+          } else  if(curr === eur && (item.name === 'btc' || item.name === 'eth')){
+            let res = (item.course / courseEurUsd);
+            formulaDefault(res)
           } else {
             formulaDefault(item.course, course, val);
           }
@@ -159,8 +162,6 @@ export default function calculationsData(params, city = false, sing) {
   definitionCurrencies(crypt, rub, courseUsdRub, 'crypt');
   definitionCurrencies(crypt, uah, courseUsdUah, 'crypt');
   definitionCurrencies(crypt, kzt, courseUsdKzt, 'crypt');
-  // definitionCurrencies(crypt, eur, courseEthEur, 'crypt');
-  // definitionCurrencies(crypt, eur, courseBtcEur, 'crypt');
 
   function searchMatches(currency, name) {
     if (buyCurrency === currency || sellCurrency === currency) {
@@ -180,7 +181,7 @@ export default function calculationsData(params, city = false, sing) {
 
 
   function formulaDefault(mainCourse, course, value) {
-    params.value = params.data.course.min_max_percent;
+    params.value = city === false ? params.data.course.min_max_percent : params.data.min_max_percent;
     let res
     if (sing === '+') {
       res = (mainCourse + (0.01 * mainCourse * (Number(params.value) - 0.1)) + (mainCourse * 0.001)).toFixed(4);
@@ -201,19 +202,24 @@ export default function calculationsData(params, city = false, sing) {
         res = (res * course).toFixed(4);
       }
     }
-    // if (city === true) {
-    //   if (params.data.course.min_course !== "1" && params.data.course.min_course !== 1) {
-    //     rowNode.setDataValue([`min_course`], +res);
-    //   } else if (params.data.course.max_course !== "1" && params.data.course.max_course !== 1) {
-    //     rowNode.setDataValue([`max_course`], +res)
-    //   }
-    // } else {
-    //   if (params.data.course.min_course !== "1" && params.data.course.min_course !== 1) {
-    //     rowNode.setDataValue([`course.min_course`], +res);
-    //   } else if (params.data.course.max_course !== "1" && params.data.course.max_course !== 1) {
-    //     rowNode.setDataValue([`course.max_course`], +res)
-    //   }
-    // }
+    console.log(res)
+    if (city === true) {
+      if (params.data.course.min_course !== "1" && params.data.course.min_course !== 1) {
+        rowNode.setDataValue([`min_course`], +res);
+        params.api.flashCells({rowNodes: [rowNode], columns: [`min_course`]});
+      } else if (params.data.course.max_course !== "1" && params.data.course.max_course !== 1) {
+        rowNode.setDataValue([`max_course`], +res)
+        params.api.flashCells({rowNodes: [rowNode], columns: [`max_course`]});
+      }
+    } else {
+      if (params.data.course.min_course !== "1" && params.data.course.min_course !== 1) {
+        rowNode.setDataValue([`course.min_course`], +res);
+        params.api.flashCells({rowNodes: [rowNode], columns: [`course.min_course`]});
+      } else if (params.data.course.max_course !== "1" && params.data.course.max_course !== 1) {
+        rowNode.setDataValue([`course.max_course`], +res)
+        params.api.flashCells({rowNodes: [rowNode], columns: [`course.max_course`]});
+      }
+    }
 
 
   }
