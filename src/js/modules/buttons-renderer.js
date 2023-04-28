@@ -59,7 +59,7 @@ export default function buttonsRenderer(params, gridOptions, send, res = null) {
     
 
     item.addEventListener('click', debounce((e) => {
-      if (localStorage.getItem('merge-percentage-exchange') === '1') {
+      if (localStorage.getItem('merge-percentage-exchange') === '1' && send === 1) {
         searchCurrencies(res, params)
       } else {
         if (send === 0) {
