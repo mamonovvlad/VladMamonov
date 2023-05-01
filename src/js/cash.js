@@ -60,7 +60,6 @@ const gridOptions = {
     {
       headerName: 'КУРС',
       width: 120,
-      field: 'course',
       editable: true,
       cellClass: params => {
         return 'field-change';
@@ -118,15 +117,6 @@ const gridOptions = {
           return false
         }
       },
-      cellRenderer: (params) => {
-        if (params.data.is_set_exchange === '1' || params.data.is_set_exchange === 1) {
-          return params.data.min_course
-        } else if (params.data.is_set_max_exchange === '1' || params.data.is_set_max_exchange === 1) {
-          return params.data.max_course
-        } else {
-          return params.data.rate
-        }
-      }
     },
     {
       headerName: 'ТАРИФЫ',
