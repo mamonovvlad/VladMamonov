@@ -60,63 +60,29 @@ const gridOptions = {
     {
       headerName: 'КУРС',
       width: 120,
+      field: 'rate',
       editable: true,
       cellClass: params => {
         return 'field-change';
       },
-      valueGetter: function (params) {
-        let sell = parseFloat(params.node.data.course.sell);
-        let buy = parseFloat(params.node.data.course.buy);
-        let buyCur = params.node.data.buyCurrency.id;
-        let sellCur = params.node.data.sellCurrency.id;
-        let usdId = ['1', '2', '6', '7', '8', '12', '28', '29', '30', '42'];
-        let uahId = ['3', '5', '26', '31', '35', '43', '44', '45'];
-        let rubId = ['9', '11', '13', '14', '15', '16', '17', '18', '23', '24', '37', '40'];
-
-        if (usdId.includes(sellCur) && usdId.includes(buyCur) || uahId.includes(sellCur) && uahId.includes(buyCur) || rubId.includes(sellCur) && rubId.includes(buyCur)) {
-          return course(5);
+      cellRenderer: (params) => {
+        console.log(params)
+        if (params.data.is_set_exchange === '1' || params.data.is_set_exchange === 1) {
+          return params.data.min_course
+        } else if (params.data.is_set_max_exchange === '1' || params.data.is_set_max_exchange === 1) {
+          return params.data.max_course
         } else {
-          return course(5);
-        }
-        function course(number) {
-          if (params.data.is_set_exchange === '1' || params.data.is_set_exchange === 1) {
-            return params.data.min_course
-          } else if (params.data.is_set_max_exchange === '1' || params.data.is_set_max_exchange === 1) {
-            return params.data.max_course
-          } else {
-            if (sell >= 1 && sell <= 1) {
-              return buy.toFixed(number);
-            } else if (buy >= 1 && buy <= 1) {
-              return sell.toFixed(number);
+          if (params.data.rate === null && (params.data.is_rate === 0 || params.data.is_rate === '0')) {
+            if (params.node.data.course.sell >= 1 && params.node.data.course.sell <= 1) {
+              return params.node.data.course.buy.toFixed(5);
+            } else if (params.node.data.course.buy >= 1 && params.node.data.course.buy <= 1) {
+              return params.node.data.course.sell.toFixed(5);
             }
+          } else {
+            return params.data.rate
           }
         }
-      },
-      valueSetter: function (params) {
-        let sell = parseFloat(params.data.course.sell);
-        let buy = parseFloat(params.data.course.buy);
-        if (sell >= 1 && sell <= 1) {
-          params.data.course.buy = params.newValue;
-          let data = JSON.stringify({
-            id: params.node.data.course.id,
-            field: 'course.buy',
-            value: params.newValue
-          })
-          updateTable(data);
-          return params.newValue;
-        } else if (buy >= 1 && buy <= 1) {
-          params.data.course.sell = params.newValue;
-          let data = JSON.stringify({
-            id: params.node.data.course.id,
-            field: 'course.sell',
-            value: params.newValue
-          })
-          updateTable(data);
-          return params.newValue;
-        } else {
-          return false
-        }
-      },
+      }
     },
     {
       headerName: 'ТАРИФЫ',
