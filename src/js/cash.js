@@ -66,7 +66,6 @@ const gridOptions = {
         return 'field-change';
       },
       cellRenderer: (params) => {
-        console.log(params)
         if (params.data.is_set_exchange === '1' || params.data.is_set_exchange === 1) {
           return params.data.min_course
         } else if (params.data.is_set_max_exchange === '1' || params.data.is_set_max_exchange === 1) {

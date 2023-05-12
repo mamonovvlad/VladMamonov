@@ -15,7 +15,9 @@ export let courseUsdRub,
   courseBnb,
   courseEth,
   courseDoge,
-  courseTron;
+  courseTron,
+  courseCadUsd,
+  courseGbpUsd;
 
 export const gettingCourses = function () {
   let url = proxy +
@@ -30,6 +32,7 @@ export const gettingCourses = function () {
   }).then(res => res.json()).then(res => {
     for (let value of res) {
       let data;
+      console.log(value)
       if (value.name === 'usd_uah_course') {
         courseUsdUah = Number(value.value);
       } else if (value.name === 'usd_rub_course') {
@@ -74,6 +77,12 @@ export const gettingCourses = function () {
       } else if (value.name === 'bnb_course') {
         data = JSON.parse(value.value);
         courseBnb = Number(data.usd);
+      } else if (value.name === 'cad_usd_course') {
+        data = JSON.parse(value.value);
+        courseCadUsd = Number(data);
+      } else if (value.name === 'gbp_usd_course') {
+        data = JSON.parse(value.value);
+        courseGbpUsd = Number(data);
       }
     }
   });
