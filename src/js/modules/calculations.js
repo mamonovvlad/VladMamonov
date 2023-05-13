@@ -18,7 +18,7 @@ import {
   courseGbpUsd
 } from "./getting-courses.js";
 
-const usdId = [1, 2, 6, 7, 8, 12, 28, 29, 30, 42, 54, 55];
+const usdId = [1, 2, 6, 7, 8, 12, 28, 29, 30, 42];
 const uahId = [3, 5, 26, 31, 35, 43, 44, 45];
 const rubId = [9, 11, 13, 14, 15, 16, 17, 18, 23, 24, 37, 40];
 const eurId = [32, 48];
@@ -34,6 +34,8 @@ export default function calculationsData(params, city = false, sing) {
   let uah;
   let eur;
   let kzt;
+  let gbp = 54;
+  let cad = 55;
 
   function identificationIdentifier(id, name) {
     id.forEach(currency => {
@@ -74,7 +76,6 @@ export default function calculationsData(params, city = false, sing) {
   }
   //eur
   if (eur === sellCurrency && usd === buyCurrency || usd === sellCurrency && eur === buyCurrency) {
-    console.log(courseEurUsd)
     formulaDefault(courseEurUsd)
   }
 
@@ -151,6 +152,7 @@ export default function calculationsData(params, city = false, sing) {
           } else {
             formulaDefault(item.course, course, val);
           }
+
         }
       }
     }
@@ -162,8 +164,8 @@ export default function calculationsData(params, city = false, sing) {
   definitionCurrencies(crypt, rub, courseUsdRub, 'crypt');
   definitionCurrencies(crypt, uah, courseUsdUah, 'crypt');
   definitionCurrencies(crypt, kzt, courseUsdKzt, 'crypt');
-  definitionCurrencies(crypt, usd, courseCadUsd, 'crypt');
-  definitionCurrencies(crypt, usd, courseGbpUsd, 'crypt');
+  definitionCurrencies(crypt, cad, courseCadUsd, 'crypt');
+  definitionCurrencies(crypt, gbp, courseGbpUsd, 'crypt');
 
   function searchMatches(currency, name) {
     if (buyCurrency === currency || sellCurrency === currency) {
@@ -204,7 +206,6 @@ export default function calculationsData(params, city = false, sing) {
         res = (res * course).toFixed(4);
       }
     }
-    console.log(res)
     if (city === true) {
       if (params.data.course.min_course !== "1" && params.data.course.min_course !== 1) {
         rowNode.setDataValue([`min_course`], +res);

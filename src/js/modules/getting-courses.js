@@ -32,7 +32,6 @@ export const gettingCourses = function () {
   }).then(res => res.json()).then(res => {
     for (let value of res) {
       let data;
-      console.log(value)
       if (value.name === 'usd_uah_course') {
         courseUsdUah = Number(value.value);
       } else if (value.name === 'usd_rub_course') {
