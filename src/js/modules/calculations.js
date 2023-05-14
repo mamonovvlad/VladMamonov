@@ -164,7 +164,6 @@ export default function calculationsData(params, city = false, sing) {
             let res = (item.course / courseCadUsd);
             formulaDefault(res)
           } else {
-            console.log('1')
             formulaDefault(item.course, course, val);
           }
 
@@ -222,10 +221,10 @@ export default function calculationsData(params, city = false, sing) {
       }
     }
     if (city === true) {
-      if (params.data.course.min_course !== "1" && params.data.course.min_course !== 1) {
+      if (params.data.min_course !== "1" && params.data.min_course !== 1 && params.data.min_course !== null) {
         rowNode.setDataValue([`min_course`], +res);
         params.api.flashCells({rowNodes: [rowNode], columns: [`min_course`]});
-      } else if (params.data.course.max_course !== "1" && params.data.course.max_course !== 1) {
+      } else if (params.data.max_course !== "1" && params.data.max_course !== 1 && params.data.max_course !== null) {
         rowNode.setDataValue([`max_course`], +res)
         params.api.flashCells({rowNodes: [rowNode], columns: [`max_course`]});
       }
