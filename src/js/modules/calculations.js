@@ -78,6 +78,14 @@ export default function calculationsData(params, city = false, sing) {
   if (eur === sellCurrency && usd === buyCurrency || usd === sellCurrency && eur === buyCurrency) {
     formulaDefault(courseEurUsd)
   }
+  //gbp
+  if (gbp === sellCurrency && usd === buyCurrency || usd === sellCurrency && gbp === buyCurrency) {
+    formulaDefault(courseGbpUsd)
+  }
+  //cad
+  if (cad === sellCurrency && usd === buyCurrency || usd === sellCurrency && cad === buyCurrency) {
+    formulaDefault(courseCadUsd)
+  }
 
   let currencies = [
     {
@@ -146,10 +154,17 @@ export default function calculationsData(params, city = false, sing) {
           if (curr === usd && (item.name === 'doge' || item.name === 'tron')) {
             let res = (1 / item.course);
             formulaDefault(res)
-          } else  if(curr === eur && (item.name === 'btc' || item.name === 'eth')){
+          } else if (curr === eur && (item.name === 'btc' || item.name === 'eth')) {
             let res = (item.course / courseEurUsd);
             formulaDefault(res)
+          } else if (curr === gbp && (item.name === 'btc' || item.name === 'eth')) {
+            let res = (item.course / courseGbpUsd);
+            formulaDefault(res)
+          } else if (curr === cad && (item.name === 'btc' || item.name === 'eth')) {
+            let res = (item.course / courseCadUsd);
+            formulaDefault(res)
           } else {
+            console.log('1')
             formulaDefault(item.course, course, val);
           }
 
