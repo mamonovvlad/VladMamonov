@@ -62,6 +62,8 @@ const openTab = (sellCurrency, buyCurrency, getCity, number) => {
     MIAMI: 'miami',
     MRBL: 'mrbl',
     MLG: 'mlg',
+    TRNT: 'trnt',
+    LNDN: 'lndn',
   }
   const namesMap = {
     BNBBEP20: 'binance-coin',
@@ -101,6 +103,8 @@ const openTab = (sellCurrency, buyCurrency, getCity, number) => {
     USDTERC20: 'tether-erc20',
     CARDKZT: 'visa-mastercard-kzt',
     KSPBKZT: 'kaspi-bank',
+    CASHCAD: 'cash-cad',
+    CASHGBP: 'pound-cash',
   };
   if (number !== 1) {
     window.open("//bestchange.ru/" + namesMap[sellCurrency] + '-to-' + namesMap[buyCurrency] + ".html", 'example', 'width=1000,height=500');
