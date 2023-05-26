@@ -70,6 +70,14 @@ const openTab = (sellCurrency, buyCurrency, getCity, number) => {
     PHUK: 'phuk',
     WRCL: 'wrcl',
     KRKW: 'krkw',
+    DNPR: 'dnpr',
+    LVOV: 'lvov',
+    ZAP: 'zap',
+    KRVR: 'krvr',
+    MYKL: 'mykl',
+    UZHH: 'uzhh',
+    CHERN: 'chern',
+    IVFR: 'ivfr',
   }
   const namesMap = {
     BNBBEP20: 'binance-coin',
