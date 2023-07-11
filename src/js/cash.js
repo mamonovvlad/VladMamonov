@@ -28,7 +28,7 @@ const gridOptions = {
     {
       headerName: '№',
       field: 'buyCurrency.symbol',
-      sort: 'asc',
+
       rowDrag: true,
       width: 120,
       cellRenderer: params => {
@@ -39,6 +39,33 @@ const gridOptions = {
       headerName: 'НАЗВАНИЕ',
       field: 'title',
       minWidth: 60,
+      comparator: (a, b) => {
+        const direction = [
+          'Tether TRC20 USDT - Наличные USD',
+          'Tether ERC20 USDT - Наличные USD',
+          'Bitcoin - Наличные USD',
+          'Ethereum - Наличные USD',
+          'Tether TRC20 USDT - Наличные EUR',
+          'Tether ERC20 USDT - Наличные EUR',
+          'Bitcoin - Наличные EUR',
+          'Ethereum - Наличные EUR',
+          'Наличные USD - Tether TRC20 USDT',
+          'Наличные USD - Tether ERC20 USDT',
+          'Наличные USD - Bitcoin',
+          'Наличные USD - Ethereum',
+          'Tether TRC20 USDT - Наличные CAD',
+          'Tether ERC20 USDT - Наличные CAD',
+          'Bitcoin - Наличные CAD',
+          'Ethereum - Наличные CAD',
+          'Tether TRC20 USDT - Наличные GBP',
+          'Tether ERC20 USDT - Наличные GBP',
+          'Bitcoin - Наличные GBP',
+          'Ethereum - Наличные GBP',
+          'Advanced Cash USD - Наличные USD',
+        ];
+        return direction.indexOf(a) - direction.indexOf(b);
+      },
+      sortable: true,
       sort: 'asc',
       cellRenderer: (params) => {
         return openWindow(params, 1)
@@ -222,6 +249,7 @@ const gridOptions = {
   rowHeight: 40,
   defaultColDef: {
     resizable: true,
+
   },
   animateRows: true,
   onGridReady: function (params) {
