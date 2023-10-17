@@ -15,6 +15,7 @@ import {
   courseDoge,
   courseTron,
   courseCadUsd,
+  courseAedUsd,
   courseGbpUsd
 } from "./getting-courses.js";
 
@@ -36,6 +37,7 @@ export default function calculationsData(params, city = false, sing) {
   let kzt;
   let gbp = 54;
   let cad = 55;
+  let aed = 56;
 
   function identificationIdentifier(id, name) {
     id.forEach(currency => {
@@ -86,29 +88,11 @@ export default function calculationsData(params, city = false, sing) {
   if (cad === sellCurrency && usd === buyCurrency || usd === sellCurrency && cad === buyCurrency) {
     formulaDefault(courseCadUsd)
   }
+  //aed
+  if (aed === sellCurrency && usd === buyCurrency || usd === sellCurrency && aed === buyCurrency) {
+    formulaDefault(courseAedUsd)
+  }
 
-  let currencies = [
-    {
-      name: 'rub',
-      value: rub,
-    },
-    {
-      name: 'usd',
-      value: usd,
-    },
-    {
-      name: 'uah',
-      value: uah
-    },
-    {
-      name: 'eur',
-      value: eur
-    },
-    {
-      name: 'kzt',
-      value: kzt
-    }
-  ];
 
   let crypt = [
     {
@@ -163,6 +147,9 @@ export default function calculationsData(params, city = false, sing) {
           } else if (curr === cad && (item.name === 'btc' || item.name === 'eth')) {
             let res = (item.course / courseCadUsd);
             formulaDefault(res)
+          } else if (curr === aed && (item.name === 'btc' || item.name === 'eth')) {
+            let res = (item.course / courseAedUsd);
+            formulaDefault(res)
           } else {
             formulaDefault(item.course, course, val);
           }
@@ -179,6 +166,7 @@ export default function calculationsData(params, city = false, sing) {
   definitionCurrencies(crypt, uah, courseUsdUah, 'crypt');
   definitionCurrencies(crypt, kzt, courseUsdKzt, 'crypt');
   definitionCurrencies(crypt, cad, courseCadUsd, 'crypt');
+  definitionCurrencies(crypt, aed, courseAedUsd, 'crypt');
   definitionCurrencies(crypt, gbp, courseGbpUsd, 'crypt');
 
   function searchMatches(currency, name) {

@@ -15,118 +15,17 @@ function windowOpen(params, number = 0) {
     let sellCurrency = link.getAttribute('data-sell')
     let buyCurrency = link.getAttribute('data-buy')
     let getCity = link.getAttribute('data-city')
-    openTab(sellCurrency, buyCurrency, getCity, number)
+    openTab(params,sellCurrency, buyCurrency, getCity, number)
   });
   
   return links;
 }
 
-const openTab = (sellCurrency, buyCurrency, getCity, number) => {
-  const namesCity = {
-    KIEV: 'kiev',
-    VALEN: 'valen',
-    WARS: 'wars',
-    HMLN: 'hmln',
-    VINN: 'vinn',
-    ODS: 'ods',
-    SUMY: 'sumy',
-    HRK: 'hrk',
-    BTM: 'btm',
-    TBIL: 'tbil',
-    ERVN: 'ervn',
-    DUBAI: 'dubai',
-    TASHK: 'tashk',
-    STPNK: 'stpnk',
-    BER: 'ber',
-    LISB: 'lisb',
-    MON: 'mon',
-    NICE: 'nice',
-    STAM: 'stam',
-    ANTL: 'antl',
-    KISH: 'kish',
-    BARC: 'barc',
-    ALIC: 'alic',
-    BUD: 'bud',
-    WIEN: 'wien',
-    SFA: 'sfa',
-    VARN: 'varn',
-    CANN: 'cann',
-    MILAN: 'milan',
-    ROME: 'rome',
-    PRAG: 'prag',
-    FRAN: 'fran',
-    BRUS: 'brus',
-    BALI: 'bali',
-    NYC: 'nyc',
-    LOSAN: 'losan',
-    MIAMI: 'miami',
-    MRBL: 'mrbl',
-    MLG: 'mlg',
-    TRNT: 'trnt',
-    LNDN: 'lndn',
-    DUSS: 'duss',
-    RIGA: 'riga',
-    VILN: 'viln',
-    PHUK: 'phuk',
-    WRCL: 'wrcl',
-    KRKW: 'krkw',
-    DNPR: 'dnpr',
-    LVOV: 'lvov',
-    ZAP: 'zap',
-    KRVR: 'krvr',
-    MYKL: 'mykl',
-    UZHH: 'uzhh',
-    CHERN: 'chern',
-    IVFR: 'ivfr',
-    TLAV: 'tlav',
-    BHRT: 'bhrt',
-    LIMAS: 'limas',
-  }
-  const namesMap = {
-    BNBBEP20: 'binance-coin',
-    ETH: 'ethereum',
-    LTC: 'litecoin',
-    ZEC: 'zcash',
-    DASH: 'dash',
-    DOGE: 'dogecoin',
-    PRRUB: 'payeer-rub',
-    MONOBUAH: 'monobank',
-    RFBUAH: 'raiffeisen-bank-uah',
-    USBUAH: 'ukrsibbank',
-    OSDBUAH: 'oschadbank',
-    CASHUSD: 'dollar-cash',
-    CASHRUB: 'ruble-cash',
-    P24UAH: 'privat24-uah',
-    PMUSD: 'perfectmoney-usd',
-    PRUSD: 'payeer',
-    BTC: 'bitcoin',
-    XRP: 'ripple',
-    PMBBUAH: 'pumb',
-    YAMRUB: 'yandex-money',
-    OKUSD: 'okpay',
-    WEXEUSD: 'wex',
-    QWRUB: 'qiwi',
-    ADVCUSD: 'advanced-cash',
-    SBERRUB: 'sberbank',
-    TCSBRUB: 'tinkoff',
-    ACRUB: 'alfaclick',
-    TBRUB: 'telebank',
-    RUSSTRUB: 'russtandart',
-    CARDRUB: 'visa-mastercard-rub',
-    CARDUAH: 'visa-mastercard-uah',
-    TRX: 'tron',
-    CASHEUR: 'euro-cash',
-    USDTTRC20: 'tether-trc20',
-    USDTERC20: 'tether-erc20',
-    CARDKZT: 'visa-mastercard-kzt',
-    KSPBKZT: 'kaspi-bank',
-    CASHCAD: 'cash-cad',
-    CASHGBP: 'pound-cash',
-  };
+const openTab = (params,sellCurrency, buyCurrency, getCity, number) => {
   if (number !== 1) {
-    window.open("//bestchange.ru/" + namesMap[sellCurrency] + '-to-' + namesMap[buyCurrency] + ".html", 'example', 'width=1000,height=500');
+    window.open("//bestchange.ru/" + params.data.sellCurrency.bestchange_code + '-to-' + params.data.buyCurrency.bestchange_code + ".html", 'example', 'width=1000,height=500');
   } else {
-    window.open("//bestchange.ru/" + namesMap[sellCurrency] + '-to-' + namesMap[buyCurrency] + '-in-' + namesCity[getCity] + ".html", 'example', 'width=1000,height=500');
+    window.open("//bestchange.ru/" + params.data.sellCurrency.bestchange_code + '-to-' + params.data.buyCurrency.bestchange_code + '-in-' + params.data.city.code.toLowerCase() + ".html", 'example', 'width=1000,height=500');
   }
   
 }
