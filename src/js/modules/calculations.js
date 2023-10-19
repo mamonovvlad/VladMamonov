@@ -209,10 +209,10 @@ export default function calculationsData(params, city = false, sing) {
       }
     }
     if (city === true) {
-      if (params.data.min_course !== "1" && params.data.min_course !== 1 && params.data.min_course !== null) {
+      if (params.data.is_set_exchange === 1 || params.data.is_set_exchange === true) {
         rowNode.setDataValue([`min_course`], +res);
         params.api.flashCells({rowNodes: [rowNode], columns: [`min_course`]});
-      } else if (params.data.max_course !== "1" && params.data.max_course !== 1 && params.data.max_course !== null) {
+      } else if (params.data.is_set_max_exchange === 1 || params.data.is_set_max_exchange === true) {
         rowNode.setDataValue([`max_course`], +res)
         params.api.flashCells({rowNodes: [rowNode], columns: [`max_course`]});
       }

@@ -1,6 +1,7 @@
 import {changeCourseCity} from "./sending-data.js";
 
 function searchCurrencies(res, par) {
+  console.log(res)
   updateMerge(par.data.id, par)
   // Save data table
   res.forEach(item => {
